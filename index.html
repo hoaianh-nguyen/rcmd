@@ -419,7 +419,11 @@ async function init(){
     SUMMARY=sum; L1LIST=l1; KW=kw; HTC_RAW=htc;
     renderSummary();
   }catch(e){
-    document.getElementById('sumPanels').innerHTML=`<div class="nodata">⚠ Could not load data.json — run <code>python prepare_data.py</code> first.</div>`;
+    document.getElementById('sumPanels').innerHTML=`<div class="nodata" style="line-height:2">
+  ⚠ <strong>data.json not found.</strong><br>
+  Step 1 — generate data: <code>python prepare_data.py</code><br>
+  Step 2 — start server: <code>python serve.py</code> &nbsp;(opens browser automatically)
+</div>`; 
   }
 }
 let DATA=null;
