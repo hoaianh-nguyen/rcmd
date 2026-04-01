@@ -202,8 +202,64 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;
 .kwscores strong{color:var(--tx)}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<style>
+.login-overlay{position:fixed;inset:0;background:linear-gradient(135deg,#0f0f1a 0%,#1a1a3e 100%);z-index:10000;display:flex;align-items:center;justify-content:center;font-family:-apple-system,sans-serif}
+.login-card{background:#fff;border-radius:16px;padding:36px 32px 28px;width:100%;max-width:360px;box-shadow:0 24px 60px rgba(0,0,0,.4)}
+.login-logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:24px}
+.login-logo-icon{width:40px;height:40px;background:#111;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.login-title{font-size:18px;font-weight:700;color:#111;text-align:center;margin-bottom:4px}
+.login-sub{font-size:11px;color:#888;text-align:center;margin-bottom:22px;font-family:monospace}
+.login-field{margin-bottom:11px}
+.login-lbl{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888;margin-bottom:4px;display:block;font-family:monospace}
+.login-inp{width:100%;background:#f5f5fa;border:1.5px solid #ddd;border-radius:8px;padding:10px 12px;font-family:monospace;font-size:12px;color:#111;outline:none}
+.login-inp:focus{border-color:#111}
+.login-err{font-family:monospace;font-size:10px;color:#dc2626;margin-bottom:10px;display:none;text-align:center}
+.login-err.show{display:block}
+.login-btn{width:100%;background:#111;border:none;color:#fff;font-family:monospace;font-size:12px;padding:12px;border-radius:9px;cursor:pointer;margin-top:4px}
+.login-btn:active{opacity:.85}
+.login-forgot{display:block;text-align:center;margin-top:12px;font-family:monospace;font-size:10px;color:#888;cursor:pointer}
+.login-forgot:hover{color:#111}
+</style>
 </head>
 <body>
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-card">
+    <div class="login-logo"><div class="login-logo-icon">⚡</div></div>
+    <div class="login-title">Flash Sale · SKU Rcmd</div>
+    <div class="login-sub">// SF Operations Dashboard</div>
+    <div class="login-err" id="loginErr">Incorrect username or password</div>
+    <div class="login-field">
+      <label class="login-lbl">Username</label>
+      <input class="login-inp" type="text" id="loginUser" autocomplete="username">
+    </div>
+    <div class="login-field">
+      <label class="login-lbl">Password</label>
+      <input class="login-inp" type="password" id="loginPass" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="login-btn" onclick="doLogin()">Sign in</button>
+    <a class="login-forgot" onclick="location.href='mailto:n.hoaianh93@gmail.com?subject=Dashboard Access'">Forgot password?</a>
+  </div>
+</div>
+<script>
+(function(){
+  var _cu=[67,68,74,66,74,69,67,5,69,76,94,82,78,69];
+  var _cp=[102,64,107,26,25,24,31,30,29];
+  function _dk(a,k){return a.map(function(c){return String.fromCharCode(c^k);}).join('');}
+  var _u=_dk(_cu,43),_p=_dk(_cp,43);
+  function checkSession(){if(sessionStorage.getItem('auth')==='1')hideLogin();}
+  window.doLogin=function(){
+    var u=document.getElementById('loginUser').value.trim();
+    var p=document.getElementById('loginPass').value;
+    if(u===_u&&p===_p){sessionStorage.setItem('auth','1');hideLogin();}
+    else{var e=document.getElementById('loginErr');e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2000);}
+  };
+  function hideLogin(){var ov=document.getElementById('loginOverlay');if(ov){ov.style.opacity='0';ov.style.transition='opacity .3s';setTimeout(()=>ov.style.display='none',300);}}
+  window.addEventListener('DOMContentLoaded',checkSession);
+})();
+</script>
+
+
 <div id="app">
 
   <div id="hdr">
@@ -352,9 +408,10 @@ const FS = {};
 async function init(){
   buildDayTabs();
   try{
-    const [stats,sum,l1,kw,htc]=await Promise.all([
-      api('/api/stats'),api('/api/summary'),api('/api/l1list'),api('/api/keywords'),api('/api/htc')
-    ]);
+    await loadData();
+    const [stats,sum,l1,kw,htc]=[
+      computeStats(),DATA.summary,computeL1List(),DATA.keywords||{},DATA.htc||[]
+    ];
     document.getElementById('hdrStats').innerHTML=
       `<div class="stat"><strong>${stats.total_recommendations.toLocaleString()}</strong> total SKUs</div>
        <div class="stat"><strong>${stats.cities.length}</strong> cities</div>
@@ -362,10 +419,24 @@ async function init(){
     SUMMARY=sum; L1LIST=l1; KW=kw; HTC_RAW=htc;
     renderSummary();
   }catch(e){
-    document.getElementById('sumPanels').innerHTML=`<div class="nodata">⚠ Cannot connect to http://127.0.0.1:5050 — is app.py running?</div>`;
+    document.getElementById('sumPanels').innerHTML=`<div class="nodata">⚠ Could not load data.json — run <code>python prepare_data.py</code> first.</div>`;
   }
 }
-async function api(url){const r=await fetch(url);if(!r.ok)throw new Error(r.status);return r.json();}
+let DATA=null;
+async function loadData(){
+  const r=await fetch('./data.json');
+  if(!r.ok)throw new Error('data.json not found — run prepare_data.py first');
+  DATA=await r.json();
+}
+function computeStats(){
+  const recs=DATA.package1||[];
+  return{total_recommendations:recs.length,
+    cities:[...new Set(recs.map(r=>r.city))].sort(),
+    days:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]};
+}
+function computeL1List(){
+  return[...new Set((DATA.package1||[]).map(r=>r.l1_category))].filter(Boolean).sort();
+}
 
 // ── day tabs ───────────────────────────────────────────────────────────────
 function buildDayTabs(){
@@ -407,11 +478,12 @@ async function loadAndRender(pkg){
     const tblEl=document.getElementById(`tbl${pkg}`);
     if(tblEl) tblEl.innerHTML='<div class="loading">Loading…</div>';
     try{
-      const rows=await api(`/api/package/${pkg}/${activeDay}`);
+      const key='package'+pkg;
+      const rows=(DATA[key]||[]).filter(r=>r.day===activeDay);
       cache[pkg][activeDay]=rows;
     }catch(e){
       const tblEl=document.getElementById(`tbl${pkg}`);
-      if(tblEl) tblEl.innerHTML=`<div class="nodata">⚠ Could not load package ${pkg}. Check app.py is running.</div>`;
+      if(tblEl) tblEl.innerHTML=`<div class="nodata">⚠ Could not load package ${pkg} from data.json.</div>`;
       return;
     }
   }
