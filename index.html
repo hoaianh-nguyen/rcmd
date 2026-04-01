@@ -420,17 +420,17 @@ async function init(){
     renderSummary();
   }catch(e){
     document.getElementById('sumPanels').innerHTML=`<div class="nodata" style="line-height:2">
-  ⚠ <strong>data.json not found.</strong><br>
-  Step 1 — generate data: <code>python prepare_data.py</code><br>
-  Step 2 — start server: <code>python serve.py</code> &nbsp;(opens browser automatically)
+  ⚠ <strong>data.json.gz not found.</strong><br>
+  Run: <code>python prepare_data.py</code> — then open index.html directly in browser.
 </div>`; 
   }
 }
 let DATA=null;
 async function loadData(){
-  const r=await fetch('./data.json');
-  if(!r.ok)throw new Error('data.json not found — run prepare_data.py first');
-  DATA=await r.json();
+  const r=await fetch('./data.json.gz');
+  if(!r.ok)throw new Error('data.json.gz not found — run prepare_data.py first');
+  const ds=new DecompressionStream('gzip');
+  DATA=await new Response(r.body.pipeThrough(ds)).json();
 }
 function computeStats(){
   const recs=DATA.package1||[];

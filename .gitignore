@@ -2,5 +2,6 @@
 *.xlsx
 *.csv
 data.json
+# data.json.gz is committed (10 MB, serves GitHub Pages)
 __pycache__/
 *.pyc

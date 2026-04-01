@@ -17,7 +17,7 @@ Package 4 — CENTER     pkg3 logic, center districts only
 Package 5 — REST       pkg3 logic, non-center districts only
 """
 
-import json, sys, re
+import json, sys, re, gzip
 from pathlib import Path
 from collections import defaultdict
 import pandas as pd
@@ -310,8 +310,14 @@ def main():
     with open(OUT_FILE,"w",encoding="utf-8") as f:
         json.dump(out,f,ensure_ascii=False,separators=(",",":"))
 
+    gz_file = OUT_FILE + ".gz"
+    with open(OUT_FILE,"rb") as f_in, gzip.open(gz_file,"wb",compresslevel=6) as f_out:
+        f_out.write(f_in.read())
+
     size_kb=Path(OUT_FILE).stat().st_size/1024
+    gz_kb=Path(gz_file).stat().st_size/1024
     print(f"\n✅  {OUT_FILE}  ({size_kb:.0f} KB)")
+    print(f"✅  {gz_file}  ({gz_kb:.0f} KB)  ← commit this for GitHub Pages")
     print(f"    p3={len(p3):,} < p2={len(p2):,} < p1={len(p1):,}  order_ok={len(p3)<len(p2)<len(p1)}")
     print(f"    p4(center)={len(p4):,}  p5(rest)={len(p5):,}")
 
