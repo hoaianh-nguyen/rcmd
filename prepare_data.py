@@ -180,6 +180,82 @@ def parse_htc_map():
     }
 
 
+def compute_filtered_list(pkg3_all, htc_map):
+    """
+    Filtered List: Package 3 logic + 1 best SKU per merchant per hour slot.
+
+    Logic:
+    1. For each weekday (Mon–Fri) use weekday HTC slots; weekend (Sat–Sun) use weekend slots.
+    2. Per slot, find L2 categories recommended (union of HN+HCM, center+rest).
+    3. Filter pkg3 items to those L2 categories.
+    4. Per merchant, keep the 1 SKU with the highest pct75 ADO (pct50 as tiebreak).
+    5. Record which of the 5 price tiers (pct25-95) the dish_price matches (±15%).
+    """
+    WD_SLOTS = ["5h-9h","9h-10h","10h-12h","12h-13h","13h-16h","16h-17h","17h-20h","20h-22h","22h-5h"]
+    WE_SLOTS = ["0h-6h","6h-10h","10h-13h","13h-16h","16h-20h","20h-24h"]
+
+    result = []
+    for day in DAYS:
+        slots   = WE_SLOTS if day in ("Sat","Sun") else WD_SLOTS
+        daytype = "weekend" if day in ("Sat","Sun") else "weekday"
+        pkg3_day = [r for r in pkg3_all if r["day"] == day]
+
+        for slot in slots:
+            allowed_l2 = set()
+            for bench in ["HN","HCM"]:
+                slot_map = htc_map.get(bench,{}).get(daytype,{}).get(slot,{})
+                for zone in ["center","rest"]:
+                    for l2 in slot_map.get(zone,[]):
+                        allowed_l2.add(l2.strip().lower())
+            if not allowed_l2:
+                continue
+
+            in_slot = [r for r in pkg3_day if (r["l2_category"] or "").strip().lower() in allowed_l2]
+
+            best = {}
+            for r in in_slot:
+                m = r["merchant"]
+                if m not in best:
+                    best[m] = r
+                else:
+                    cur = best[m]
+                    if r["pct75"] > cur["pct75"] or (r["pct75"] == cur["pct75"] and r["pct50"] > cur["pct50"]):
+                        best[m] = r
+
+            for merchant, r in best.items():
+                pm = r.get("price_pct_match") or []
+                result.append({
+                    "day":           day,
+                    "slot":          slot,
+                    "city":          r["city"],
+                    "benchmark":     r["benchmark"],
+                    "merchant_id":   r.get("merchant_id",""),
+                    "merchant":      r["merchant"],
+                    "dish_id":       r.get("dish_id",""),
+                    "sku":           r["sku"],
+                    "l1_category":   r["l1_category"],
+                    "l2_category":   r["l2_category"],
+                    "dish_price":    r.get("dish_price"),
+                    "pct25":         r["pct25"],
+                    "pct50":         r["pct50"],
+                    "pct75":         r["pct75"],
+                    "pct90":         r["pct90"],
+                    "pct95":         r["pct95"],
+                    "price_opt_pct25": r.get("price_pct25"),
+                    "price_opt_pct50": r.get("price_pct50"),
+                    "price_opt_pct75": r.get("price_pct75"),
+                    "price_opt_pct90": r.get("price_pct90"),
+                    "price_opt_pct95": r.get("price_pct95"),
+                    "match_pct25":   "pct25" in pm,
+                    "match_pct50":   "pct50" in pm,
+                    "match_pct75":   "pct75" in pm,
+                    "match_pct90":   "pct90" in pm,
+                    "match_pct95":   "pct95" in pm,
+                    "price_pct_match": pm,
+                })
+    return result
+
+
 def main():
     for f in [CSV_FILE, XLSX_FILE]:
         if not Path(f).exists(): sys.exit(f"❌  Not found: {f}")
@@ -304,8 +380,12 @@ def main():
                      for k,v in row.items()} for row in htc_df.to_dict(orient="records")]
 
     htc_map=parse_htc_map()
+    print("\n  Computing Filtered List (1 best SKU/merchant/slot) …")
+    filtered_list=compute_filtered_list(p3, htc_map)
+    print(f"    Filtered list: {len(filtered_list):,} rows")
     out={"summary":summary,"package1":p1,"package2":p2,"package3":p3,
-         "package4":p4,"package5":p5,"keywords":kw_cache,"htc":htc_data or [],"htc_map":htc_map}
+         "package4":p4,"package5":p5,"keywords":kw_cache,"htc":htc_data or [],"htc_map":htc_map,
+         "filtered_list":filtered_list}
 
     with open(OUT_FILE,"w",encoding="utf-8") as f:
         json.dump(out,f,ensure_ascii=False,separators=(",",":"))

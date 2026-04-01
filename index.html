@@ -51,6 +51,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;
 .vtab[data-v="pkg3"].active{border-bottom-color:var(--p3c);color:var(--p3c)}
 .vtab[data-v="pkg4"].active{border-bottom-color:var(--p4c);color:var(--p4c)}
 .vtab[data-v="pkg5"].active{border-bottom-color:var(--p5c);color:var(--p5c)}
+.vtab[data-v="fl"].active{border-bottom-color:var(--p3c);color:var(--p3c)}
 
 /* body */
 #body{flex:1;overflow-y:auto;padding:20px 28px;display:flex;flex-direction:column;gap:20px}
@@ -164,6 +165,31 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;
 .pmtag{padding:1px 5px;border-radius:3px;background:#dcfce7;color:#166534;font-weight:600}
 .rsn{font-size:11px;color:var(--mu);line-height:1.4;max-width:170px}
 .kwcell{font-size:11px;color:var(--p4c);max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Filtered List extras */
+.pmok{color:#166534;font-weight:700;font-size:12px}
+.pmno{color:var(--fa);font-size:12px}
+.slotbadge{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;background:#f0f0ec;color:var(--mu);white-space:nowrap}
+.tier-strip{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.tier-card{background:var(--surf);border:1px solid var(--bdr);border-radius:8px;padding:10px 16px;min-width:130px;display:flex;flex-direction:column;gap:2px;box-shadow:var(--sh)}
+.tier-card .tc-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:var(--mu)}
+.tier-card .tc-count{font-size:22px;font-weight:750;color:var(--p2c);letter-spacing:-.5px}
+.tier-card .tc-pct{font-size:10px;color:var(--mu)}
+.tier-card.best{border-color:var(--p2c);background:#f0fdf4}
+.fl-ctrl{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);
+  padding:10px 14px;margin-bottom:8px;box-shadow:var(--sh);
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.fl-ctrl label{display:flex;flex-direction:column;gap:3px;font-size:10px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.4px;color:var(--mu)}
+.fl-ctrl select,.fl-ctrl input[type=text]{border:1px solid var(--bdr);border-radius:6px;
+  padding:4px 8px;font-size:12px;font-family:inherit;background:var(--surf);color:var(--tx);outline:none}
+.fl-ctrl select:focus,.fl-ctrl input:focus{border-color:#aaa}
+.fl-cnt{font-size:11px;color:var(--mu);margin-left:auto;white-space:nowrap}
+.day-tab{padding:5px 12px;border-radius:6px;border:1px solid var(--bdr);background:transparent;
+  color:#666;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .12s}
+.day-tab:hover{background:var(--bdr2)}
+.day-tab.active{background:#111;color:#fff}
+.day-tab.wknd.active{background:var(--hp);border-color:var(--hp)}
+
 .nodata{padding:36px;text-align:center;color:var(--mu);font-size:13px}
 .tip{padding:8px;text-align:center;font-size:11px;color:var(--mu);border-top:1px solid var(--bdr2)}
 .loading{padding:36px;text-align:center;color:var(--mu)}
@@ -299,6 +325,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;
     <div class="vtab"        data-v="pkg3" onclick="sv('pkg3',this)">Package 3 — Strict ADO</div>
     <div class="vtab"        data-v="pkg4" onclick="sv('pkg4',this)">Package 4 — Center</div>
     <div class="vtab"        data-v="pkg5" onclick="sv('pkg5',this)">Package 5 — Rest</div>
+    <div class="vtab"        data-v="fl"   onclick="sv('fl',this)">Filtered List</div>
   </div>
 
   <div id="body">
@@ -395,6 +422,33 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;
       <div class="htcwrap" id="htc5"><div class="loading">Loading HTC data…</div></div>
     </div>
 
+    <!-- FILTERED LIST -->
+    <div id="vFl" style="display:none">
+      <div class="lcard" style="border-left:3px solid var(--p3c);margin-bottom:14px">
+        <h3><span class="pbadge" style="background:#fee2e2;color:var(--p3c)">Filtered List</span>&nbsp; 1 best SKU per merchant per hour slot</h3>
+        <ul>
+          <li><strong>Base:</strong> Package 3 logic (pct75 ADO ≥ 4.0) — items filtered to L2 categories recommended by the HTC sheet for each hour slot</li>
+          <li><strong>Selection rule:</strong> Per merchant × hour slot → the 1 SKU with highest pct75 ADO is picked (pct50 as tiebreak)</li>
+          <li><strong>5 price options:</strong> benchmark pct25/50/75/90/95 shown as suggested price tiers · ✓ = dish_price within ±15% of that tier</li>
+          <li>Weekday slots (Mon–Fri) · Weekend slots (Sat–Sun) — derived from HTC sheet</li>
+        </ul>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap" id="flDayTabs"></div>
+      <div id="flCtrl" class="fl-ctrl" style="display:none">
+        <label>City<select id="flCity" onchange="apFl()"><option value="">All</option><option>Hai Phong</option><option>Binh Duong</option></select></label>
+        <label>Hour slot<select id="flSlot" onchange="apFl()"><option value="">All slots</option></select></label>
+        <label>L1 Category<select id="flL1" onchange="apFl()"><option value="">All</option></select></label>
+        <label>Search<input id="flQ" type="text" placeholder="merchant / SKU…" oninput="apFl()"></label>
+        <label style="flex-direction:row;align-items:center;gap:5px;font-size:11px;color:var(--mu);align-self:center">
+          <input type="checkbox" id="flMatchOnly" onchange="apFl()">Price match only
+        </label>
+        <span class="fl-cnt" id="flCnt"></span>
+        <button class="btn" onclick="xportFl()">↓ Excel</button>
+      </div>
+      <div class="tier-strip" id="flTierStrip" style="display:none"></div>
+      <div class="twrap"><div id="flTbl" class="loading">Select a day above</div></div>
+    </div>
+
   </div>
 </div>
 
@@ -487,12 +541,12 @@ function sv(name,el2){
   activeView=name;
   document.querySelectorAll('.vtab').forEach(t=>t.classList.remove('active'));
   el2.classList.add('active');
-  ['sum','pkg1','pkg2','pkg3','pkg4','pkg5'].forEach(v=>{
-    const e=document.getElementById('v'+v.charAt(0).toUpperCase()+v.slice(1));
-    if(e)e.style.display=v===name?'block':'none';
-  });
+  const vmap={sum:'vSum',pkg1:'vPkg1',pkg2:'vPkg2',pkg3:'vPkg3',pkg4:'vPkg4',pkg5:'vPkg5',fl:'vFl'};
+  Object.values(vmap).forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='none';});
+  const ae=document.getElementById(vmap[name]);if(ae)ae.style.display='block';
   if(name.startsWith('pkg')){const p=+name.replace('pkg','');loadAndRender(p);}
   if(name==='sum')renderSummary();
+  if(name==='fl')initFl();
 }
 
 // ── load + render ──────────────────────────────────────────────────────────
@@ -1008,6 +1062,208 @@ function renderSummary(){
 
 function el(tag,cls){const e=document.createElement(tag);if(cls)e.className=cls;return e;}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// ── Filtered List ──────────────────────────────────────────────────────────
+const DAYS_FL=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+let flDay='Mon', flData={}, flFiltered=[], flSortCol='pct75', flSortAsc=false;
+
+function initFl(){
+  const dtabs=document.getElementById('flDayTabs');
+  if(!dtabs.hasChildNodes()){
+    DAYS_FL.forEach(d=>{
+      const b=el('button','day-tab '+(WKND.has(d)?'wknd ':'')+(d===flDay?'active':''));
+      b.textContent=FULL[d];
+      if(d===flDay){b.style.background=WKND.has(d)?'var(--hp)':'#111';b.style.color='#fff';}
+      b.onclick=()=>{
+        flDay=d;
+        document.querySelectorAll('#flDayTabs .day-tab').forEach(x=>{
+          x.classList.remove('active');
+          x.style.background='transparent';x.style.color='#666';
+        });
+        b.classList.add('active');
+        b.style.background=WKND.has(d)?'var(--hp)':'#111';
+        b.style.color='#fff';
+        loadFl(d);
+      };
+      dtabs.appendChild(b);
+    });
+  }
+  loadFl(flDay);
+}
+
+function loadFl(day){
+  document.getElementById('flTbl').innerHTML='<div class="loading">Loading…</div>';
+  if(!DATA){
+    document.getElementById('flTbl').innerHTML='<div class="nodata">⚠ Data not loaded yet.</div>';
+    return;
+  }
+  if(!flData[day]){
+    const rows=(DATA.filtered_list||[]).filter(r=>r.day===day);
+    flData[day]=rows;
+    // populate slot filter
+    const slots=[...new Set(rows.map(r=>r.slot))];
+    const sel=document.getElementById('flSlot');
+    sel.innerHTML='<option value="">All slots</option>';
+    slots.forEach(s=>{const o=el('option');o.value=o.textContent=s;sel.appendChild(o);});
+    // populate L1 filter
+    const l1s=[...new Set(rows.map(r=>r.l1_category))].filter(Boolean).sort();
+    const sl1=document.getElementById('flL1');
+    sl1.innerHTML='<option value="">All</option>';
+    l1s.forEach(c=>{const o=el('option');o.value=o.textContent=c;sl1.appendChild(o);});
+    document.getElementById('flCtrl').style.display='flex';
+  }
+  apFl();
+}
+
+function apFl(){
+  const rows=flData[flDay]||[];
+  const city=(document.getElementById('flCity')||{}).value||'';
+  const slot=(document.getElementById('flSlot')||{}).value||'';
+  const l1  =(document.getElementById('flL1')||{}).value||'';
+  const q   =((document.getElementById('flQ')||{}).value||'').toLowerCase();
+  const matchOnly=document.getElementById('flMatchOnly')?.checked||false;
+
+  let r=rows.slice();
+  if(city)r=r.filter(x=>x.city===city);
+  if(slot)r=r.filter(x=>x.slot===slot);
+  if(l1)  r=r.filter(x=>x.l1_category===l1);
+  if(q)   r=r.filter(x=>x.sku.toLowerCase().includes(q)||x.merchant.toLowerCase().includes(q));
+  if(matchOnly)r=r.filter(x=>(x.price_pct_match||[]).length>0);
+
+  r.sort((a,b)=>{
+    let va=a[flSortCol]??'',vb=b[flSortCol]??'';
+    if(typeof va==='string'){va=va.toLowerCase();vb=vb.toLowerCase();}
+    return flSortAsc?(va>vb?1:-1):(va<vb?1:-1);
+  });
+  flFiltered=r;
+  const cnt=document.getElementById('flCnt');if(cnt)cnt.textContent=r.length.toLocaleString()+' rows';
+  renderFlTable(r);
+  renderTierStrip(r);
+}
+
+const FL_COLS=[
+  {k:'slot',           h:'Hour Slot', s:true},
+  {k:'city',           h:'City',      s:true, _city:true},
+  {k:'merchant_id',    h:'Merch ID',  s:true},
+  {k:'merchant',       h:'Merchant',  s:true, w:'150px'},
+  {k:'dish_id',        h:'Item ID',   s:true},
+  {k:'sku',            h:'SKU',       s:true, w:'160px'},
+  {k:'l1_category',    h:'L1',        s:true},
+  {k:'l2_category',    h:'L2',        s:true},
+  {k:'dish_price',     h:'My Price',  s:true, _price:true},
+  {k:'pct75',          h:'p75 ADO ★', s:true, cls:'pnum'},
+  {k:'price_opt_pct25',h:'Opt p25',   s:true, _bprice:true},
+  {k:'price_opt_pct50',h:'Opt p50',   s:true, _bprice:true},
+  {k:'price_opt_pct75',h:'Opt p75',   s:true, _bprice:true},
+  {k:'price_opt_pct90',h:'Opt p90',   s:true, _bprice:true},
+  {k:'price_opt_pct95',h:'Opt p95',   s:true, _bprice:true},
+  {k:'match_pct25',    h:'±p25',      s:false, _match:'pct25'},
+  {k:'match_pct50',    h:'±p50',      s:false, _match:'pct50'},
+  {k:'match_pct75',    h:'±p75',      s:false, _match:'pct75'},
+  {k:'match_pct90',    h:'±p90',      s:false, _match:'pct90'},
+  {k:'match_pct95',    h:'±p95',      s:false, _match:'pct95'},
+];
+
+function renderFlTable(rows){
+  const wrap=document.getElementById('flTbl');
+  const tbl=el('table','dtbl');
+  const hr=el('tr');
+  FL_COLS.forEach(c=>{
+    const th=el('th');th.textContent=c.h;
+    if(c.w)th.style.minWidth=c.w;
+    if(c.s){
+      if(c.k===flSortCol)th.className=flSortAsc?'sa':'sd';
+      th.onclick=()=>{flSortCol===c.k?(flSortAsc=!flSortAsc):(flSortCol=c.k,flSortAsc=false);apFl();};
+    }
+    hr.appendChild(th);
+  });
+  const thead=el('thead');thead.appendChild(hr);tbl.appendChild(thead);
+  const tb=el('tbody');
+  const slice=rows.slice(0,500);
+  if(!slice.length){
+    const tr=el('tr');tr.innerHTML=`<td colspan="${FL_COLS.length}" class="nodata">No results.</td>`;tb.appendChild(tr);
+  }else{
+    slice.forEach(r=>{
+      const tr=el('tr');
+      tr.innerHTML=FL_COLS.map(c=>{
+        if(c._city){
+          const cls=r.city==='Hai Phong'?'hp':'bd',lbl=r.city==='Hai Phong'?'HP':'BD';
+          return`<td><span class="cbadge ${cls}">${lbl}</span></td>`;
+        }
+        if(c.k==='slot')return`<td><span class="slotbadge">${esc(r.slot||'')}</span></td>`;
+        if(c._price){const n=Number(r[c.k]);return`<td class="pnum">${n?n.toLocaleString()+'₫':'—'}</td>`;}
+        if(c._bprice){const n=Number(r[c.k]);return`<td class="prnum">${n?n.toLocaleString()+'₫':'—'}</td>`;}
+        if(c._match)return`<td style="text-align:center"><span class="${r[c.k]?'pmok':'pmno'}">${r[c.k]?'✓':'·'}</span></td>`;
+        const v=r[c.k]??'';
+        const st=c.w?`style="max-width:${c.w};white-space:nowrap;overflow:hidden;text-overflow:ellipsis"`:'';
+        if(c.k==='merchant'||c.k==='sku')return`<td ${st} title="${esc(v)}" class="${c.cls||''}">${esc(v)}</td>`;
+        return`<td class="${c.cls||''}">${esc(String(v))}</td>`;
+      }).join('');
+      tb.appendChild(tr);
+    });
+    if(rows.length>500){
+      const tr=el('tr');
+      tr.innerHTML=`<td colspan="${FL_COLS.length}" class="tip">Showing 500 of ${rows.length.toLocaleString()} — use filters to narrow.</td>`;
+      tb.appendChild(tr);
+    }
+  }
+  tbl.appendChild(tb);wrap.innerHTML='';wrap.appendChild(tbl);
+}
+
+function renderTierStrip(rows){
+  const strip=document.getElementById('flTierStrip');
+  if(!strip)return;
+  const total=rows.length;
+  if(!total){strip.style.display='none';return;}
+  strip.style.display='flex';
+  const tiers=[
+    {key:'match_pct25',opt:'price_opt_pct25',label:'p25 tier'},
+    {key:'match_pct50',opt:'price_opt_pct50',label:'p50 tier'},
+    {key:'match_pct75',opt:'price_opt_pct75',label:'p75 tier'},
+    {key:'match_pct90',opt:'price_opt_pct90',label:'p90 tier'},
+    {key:'match_pct95',opt:'price_opt_pct95',label:'p95 tier'},
+  ];
+  const counts=tiers.map(t=>rows.filter(r=>r[t.key]).length);
+  const maxCount=Math.max(...counts);
+  const anyMatch=rows.filter(r=>(r.price_pct_match||[]).length>0).length;
+  const noMatch=total-anyMatch;
+  strip.innerHTML='';
+  const ov=el('div','tier-card');
+  ov.innerHTML=`<div class="tc-label">Total SKUs</div><div class="tc-count" style="color:var(--tx)">${total.toLocaleString()}</div><div class="tc-pct">${anyMatch} with any price match</div>`;
+  strip.appendChild(ov);
+  tiers.forEach((t,i)=>{
+    const n=counts[i];
+    const pct=total>0?((n/total)*100).toFixed(0):'0';
+    const isBest=n===maxCount&&n>0;
+    const card=el('div',`tier-card${isBest?' best':''}`);
+    const sample=rows.find(r=>r[t.key]);
+    const price=sample?Number(sample[t.opt]).toLocaleString()+'₫':'—';
+    card.innerHTML=`<div class="tc-label">${t.label}${isBest?' ★':''}</div><div class="tc-count">${n.toLocaleString()}</div><div class="tc-pct">${pct}% of list · ~${price}</div>`;
+    strip.appendChild(card);
+  });
+  const nm=el('div','tier-card');
+  nm.innerHTML=`<div class="tc-label" style="color:var(--fa)">No price match</div><div class="tc-count" style="color:var(--fa)">${noMatch.toLocaleString()}</div><div class="tc-pct">${total>0?((noMatch/total)*100).toFixed(0):0}% of list</div>`;
+  strip.appendChild(nm);
+}
+
+function xportFl(){
+  const rows=flFiltered;if(!rows||!rows.length)return;
+  const hdrs=['Day','Hour Slot','City','Benchmark','Merch ID','Merchant','Item ID','SKU',
+              'L1','L2','My Price','p75 ADO','Opt p25','Opt p50','Opt p75','Opt p90','Opt p95',
+              '±p25','±p50','±p75','±p90','±p95'];
+  const keys=['day','slot','city','benchmark','merchant_id','merchant','dish_id','sku',
+              'l1_category','l2_category','dish_price','pct75',
+              'price_opt_pct25','price_opt_pct50','price_opt_pct75','price_opt_pct90','price_opt_pct95',
+              'match_pct25','match_pct50','match_pct75','match_pct90','match_pct95'];
+  const wsData=[hdrs];
+  rows.forEach(r=>{wsData.push(keys.map(k=>{const v=r[k];if(typeof v==='boolean')return v?'✓':'';return v===null||v===undefined?'':v;}));});
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.aoa_to_sheet(wsData);
+  ws['!cols']=hdrs.map((h,i)=>({wch:Math.min(Math.max(h.length,...wsData.slice(1).map(r=>String(r[i]||'').length))+2,40)}));
+  ws['!freeze']={xSplit:0,ySplit:1,topLeftCell:'A2',activePane:'bottomLeft'};
+  XLSX.utils.book_append_sheet(wb,ws,'FilteredList_'+flDay);
+  XLSX.writeFile(wb,'filtered_list_'+flDay+'.xlsx');
+}
 
 init();
 </script>
