@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Flash Sale · SKU Recommendations</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f7f5;--surf:#fff;--bdr:#e8e8e4;--bdr2:#f0f0ec;
+  --tx:#111;--mu:#888;--fa:#ccc;--row:#fafaf8;
+  --hp:#2d5be3;--hp-bg:#eef3ff;
+  --bd:#d46b08;--bd-bg:#fff4e6;
+  --p1c:#374151;--p2c:#0a7c4e;--p3c:#b91c1c;
+  --p4c:#7c3aed;--p5c:#0369a1;
+  --r:10px;--sh:0 1px 4px rgba(0,0,0,.06);
+}
+html,body{height:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;
+  background:var(--bg);color:var(--tx);font-size:13px;line-height:1.5}
+#app{display:flex;flex-direction:column;height:100vh}
+
+/* header */
+#hdr{background:var(--surf);border-bottom:1px solid var(--bdr);
+  padding:13px 28px 11px;position:sticky;top:0;z-index:300;flex-shrink:0}
+.hdr-top{display:flex;align-items:baseline;gap:10px;margin-bottom:7px}
+.hdr-top h1{font-size:14px;font-weight:650;letter-spacing:-.2px}
+.hdr-sub{font-size:11px;color:var(--mu)}
+.hdr-r2{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.hdr-stats{display:flex;gap:18px}
+.stat{font-size:11px;color:var(--mu)}.stat strong{color:var(--tx);font-size:13px;font-weight:650}
+#dayTabs{display:flex;gap:3px}
+#dayTabs button{padding:5px 12px;border-radius:6px;border:1px solid transparent;
+  background:transparent;color:#666;font-size:12px;font-weight:500;
+  cursor:pointer;font-family:inherit;transition:all .12s}
+#dayTabs button:hover{background:var(--bdr2)}
+#dayTabs button.active{background:#111;color:#fff}
+#dayTabs button.wknd.active{background:var(--hp);border-color:var(--hp)}
+
+/* view tabs */
+.vtabs{display:flex;background:var(--surf);border-bottom:1px solid var(--bdr);
+  flex-shrink:0;overflow-x:auto}
+.vtabs::-webkit-scrollbar{height:0}
+.vtab{padding:9px 16px;font-size:12px;font-weight:500;color:var(--mu);
+  cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;
+  transition:all .12s;user-select:none;flex-shrink:0}
+.vtab:hover{color:var(--tx)}
+.vtab.active{color:var(--tx);border-bottom-color:var(--tx)}
+.vtab[data-v="pkg1"].active{border-bottom-color:var(--p1c);color:var(--p1c)}
+.vtab[data-v="pkg2"].active{border-bottom-color:var(--p2c);color:var(--p2c)}
+.vtab[data-v="pkg3"].active{border-bottom-color:var(--p3c);color:var(--p3c)}
+.vtab[data-v="pkg4"].active{border-bottom-color:var(--p4c);color:var(--p4c)}
+.vtab[data-v="pkg5"].active{border-bottom-color:var(--p5c);color:var(--p5c)}
+
+/* body */
+#body{flex:1;overflow-y:auto;padding:20px 28px;display:flex;flex-direction:column;gap:20px}
+#body::-webkit-scrollbar{width:5px}
+#body::-webkit-scrollbar-thumb{background:#ddd;border-radius:3px}
+
+/* logic card */
+.lcard{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);
+  padding:12px 16px;margin-bottom:12px;box-shadow:var(--sh)}
+.lcard h3{font-size:12px;font-weight:650;margin-bottom:5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pbadge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:.3px}
+.lcard.c1 .pbadge{background:#f3f4f6;color:var(--p1c)}
+.lcard.c2 .pbadge{background:#dcfce7;color:var(--p2c)}
+.lcard.c3 .pbadge{background:#fee2e2;color:var(--p3c)}
+.lcard.c4 .pbadge{background:#ede9fe;color:var(--p4c)}
+.lcard.c5 .pbadge{background:#e0f2fe;color:var(--p5c)}
+.lcard p,.lcard li{font-size:11px;color:var(--mu);line-height:1.6}
+.lcard ul{padding-left:16px;margin-top:3px}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.tag{font-size:10px;font-weight:500;padding:2px 8px;border-radius:20px;border:1px solid}
+.tag.g{border-color:#86efac;background:#f0fdf4;color:#166534}
+.tag.v{border-color:#c4b5fd;background:#f5f3ff;color:#5b21b6}
+.tag.b{border-color:#93c5fd;background:#eff6ff;color:#1d4ed8}
+.tag.r{border-color:#fca5a5;background:#fff1f2;color:#991b1b}
+
+/* ── FILTER BAR ── */
+.fbar{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);
+  padding:10px 14px;margin-bottom:12px;box-shadow:var(--sh);display:none}
+.fbar.visible{display:block}
+.frow{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-bottom:8px}
+.frow:last-child{margin-bottom:0}
+.flabel{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;
+  color:var(--mu);white-space:nowrap;padding-top:5px;min-width:90px}
+
+/* pill group */
+.pills{display:flex;gap:4px;flex-wrap:wrap;flex:1}
+.pill{padding:4px 11px;border-radius:20px;border:1px solid var(--bdr);
+  background:var(--surf);color:var(--mu);font-size:11px;font-weight:500;
+  cursor:pointer;transition:all .12s;user-select:none;white-space:nowrap}
+.pill:hover{border-color:#aaa;color:var(--tx)}
+.pill.on{border-color:var(--hp);background:var(--hp-bg);color:var(--hp);font-weight:600}
+.pill.price-on{border-color:var(--p2c);background:#dcfce7;color:var(--p2c)}
+.pill.ado-on{border-color:var(--p3c);background:#fee2e2;color:var(--p3c)}
+
+/* text search & selects */
+.finput{border:1px solid var(--bdr);border-radius:6px;padding:4px 9px;
+  font-size:12px;font-family:inherit;background:var(--surf);color:var(--tx);
+  outline:none;min-width:130px}
+.finput:focus{border-color:#aaa}
+.fcount{font-size:11px;color:var(--mu);align-self:center;margin-left:auto;white-space:nowrap}
+.factions{display:flex;gap:6px;align-items:center;margin-left:auto}
+.btn{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;
+  border-radius:6px;border:1px solid var(--bdr);background:var(--surf);color:var(--tx);
+  font-size:11px;font-weight:500;font-family:inherit;cursor:pointer;
+  transition:all .12s;white-space:nowrap}
+.btn:hover{background:#111;color:#fff;border-color:#111}
+.btn.kw{border-color:#c4b5fd;color:var(--p4c)}.btn.kw:hover{background:#ede9fe;color:var(--p4c);border-color:#c4b5fd}
+.btn.rst{color:var(--mu)}.btn.rst:hover{background:#f0f0ec;color:var(--tx);border-color:#aaa}
+
+/* summary panels */
+#vSum .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.panel{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)}
+.phdr{padding:12px 16px 10px;border-bottom:1px solid var(--bdr2)}
+.ptitle{font-size:13px;font-weight:650;display:flex;align-items:center;gap:7px;margin-bottom:9px}
+.btag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px}
+.pHp .btag{background:var(--hp-bg);color:var(--hp)}.pBd .btag{background:var(--bd-bg);color:var(--bd)}
+.krow{display:flex;gap:6px;flex-wrap:wrap}
+.kpi{background:var(--bg);border:1px solid var(--bdr);border-radius:7px;padding:6px 10px;min-width:72px}
+.klbl{font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:.4px;margin-bottom:1px}
+.kval{font-size:17px;font-weight:750;letter-spacing:-.5px}
+.pHp .kval{color:var(--hp)}.pBd .kval{color:var(--bd)}
+.ctbl{width:100%;border-collapse:collapse}
+.ctbl thead tr{border-bottom:1px solid var(--bdr2)}
+.ctbl th{padding:6px 12px;font-size:10px;font-weight:600;color:var(--fa);
+  text-transform:uppercase;letter-spacing:.4px;text-align:left}
+.ctbl th:not(:nth-child(2)){text-align:right}
+.ctbl td{padding:5px 12px;font-size:12px;border-bottom:1px solid var(--row);vertical-align:middle}
+.ctbl td:not(:nth-child(2)){text-align:right}
+.ctbl tbody tr:last-child td{border-bottom:none}
+.ctbl tbody tr:hover td{background:var(--row)}
+.cname{max-width:155px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.rdot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:5px;background:var(--fa);vertical-align:middle}
+.r1{background:#f0b429}.r2{background:#9ca3af}.r3{background:#c87533}
+.bcell{display:flex;align-items:center;justify-content:flex-end;gap:5px}
+.btrack{width:60px;height:4px;background:var(--bdr2);border-radius:2px;overflow:hidden;flex-shrink:0}
+.bfill{height:100%;border-radius:2px}
+.pHp .bfill{background:var(--hp)}.pBd .bfill{background:var(--bd)}
+.pfoot{padding:7px 12px;border-top:1px solid var(--bdr2);font-size:10px;color:var(--fa);display:flex;justify-content:space-between}
+
+/* detail table */
+.twrap{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);
+  overflow:auto;box-shadow:var(--sh);max-height:820px}
+.dtbl{width:100%;border-collapse:collapse;min-width:900px}
+.dtbl thead{position:sticky;top:0;z-index:10}
+.dtbl thead tr{border-bottom:2px solid var(--bdr2);background:var(--surf)}
+.dtbl th{padding:8px 10px;font-size:10px;font-weight:600;color:var(--mu);
+  text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;
+  cursor:pointer;user-select:none;text-align:left;background:var(--surf)}
+.dtbl th:hover{color:var(--tx)}
+.dtbl th.sa::after{content:' ↑'}.dtbl th.sd::after{content:' ↓'}
+.dtbl td{padding:6px 10px;font-size:12px;border-bottom:1px solid var(--row);vertical-align:middle}
+.dtbl tbody tr:last-child td{border-bottom:none}
+.dtbl tbody tr:hover td{background:var(--row)}
+.cbadge{display:inline-block;font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px}
+.cbadge.hp{background:var(--hp-bg);color:var(--hp)}.cbadge.bd{background:var(--bd-bg);color:var(--bd)}
+.dtype{display:inline-block;font-size:10px;font-weight:600;padding:2px 5px;border-radius:4px}
+.dtype.C{background:#ede9fe;color:var(--p4c)}.dtype.R{background:#e0f2fe;color:var(--p5c)}
+.pnum{font-size:11px;font-weight:600;font-variant-numeric:tabular-nums}
+.prnum{font-size:11px;font-weight:600;color:var(--p2c);font-variant-numeric:tabular-nums}
+.pmatch{font-size:10px;display:flex;gap:2px;flex-wrap:wrap}
+.pmtag{padding:1px 5px;border-radius:3px;background:#dcfce7;color:#166534;font-weight:600}
+.rsn{font-size:11px;color:var(--mu);line-height:1.4;max-width:170px}
+.kwcell{font-size:11px;color:var(--p4c);max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nodata{padding:36px;text-align:center;color:var(--mu);font-size:13px}
+.tip{padding:8px;text-align:center;font-size:11px;color:var(--mu);border-top:1px solid var(--bdr2)}
+.loading{padding:36px;text-align:center;color:var(--mu)}
+
+/* HTC */
+.htcwrap{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);
+  overflow:auto;box-shadow:var(--sh);max-height:360px;margin-top:14px}
+.htcwrap table{width:100%;border-collapse:collapse;min-width:500px}
+.htcwrap thead{position:sticky;top:0;background:var(--surf);z-index:5}
+.htcwrap th{padding:7px 11px;font-size:10px;font-weight:600;color:var(--mu);
+  text-transform:uppercase;letter-spacing:.4px;border-bottom:2px solid var(--bdr2);text-align:left}
+.htcwrap td{padding:5px 11px;font-size:12px;border-bottom:1px solid var(--row)}
+.htcwrap tbody tr:hover td{background:var(--row)}
+.htc-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;
+  color:var(--mu);margin-top:14px;margin-bottom:7px}
+
+/* kw panel */
+#kwPanel{display:none;position:fixed;top:0;right:0;bottom:0;width:360px;
+  background:var(--surf);border-left:1px solid var(--bdr);z-index:500;
+  flex-direction:column;overflow:hidden;box-shadow:-4px 0 20px rgba(0,0,0,.1)}
+#kwPanel.open{display:flex}
+.kwhdr{display:flex;align-items:center;justify-content:space-between;
+  padding:13px 16px;border-bottom:1px solid var(--bdr);flex-shrink:0}
+.kwhdr h3{font-size:13px;font-weight:650}
+.kwclose{background:none;border:none;font-size:18px;cursor:pointer;color:var(--mu);padding:2px 6px}
+.kwclose:hover{color:var(--tx)}
+.kwbody{flex:1;overflow-y:auto;padding:12px 16px}
+.kwsec{margin-bottom:16px}
+.kwsec h4{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;
+  color:var(--mu);margin-bottom:5px;padding-bottom:4px;border-bottom:1px solid var(--bdr2)}
+.kwrow{display:flex;align-items:baseline;justify-content:space-between;
+  padding:4px 0;border-bottom:1px solid var(--bdr2)}
+.kwrow:last-child{border-bottom:none}
+.kwword{font-size:12px;font-weight:500;color:var(--p4c)}
+.kwscores{font-size:11px;color:var(--mu);text-align:right}
+.kwscores strong{color:var(--tx)}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+<div id="app">
+
+  <div id="hdr">
+    <div class="hdr-top">
+      <h1>Flash Sale · SKU Recommendations</h1>
+      <span class="hdr-sub">Hai Phong → HN &nbsp;·&nbsp; Binh Duong → HCM</span>
+    </div>
+    <div class="hdr-r2">
+      <div class="hdr-stats" id="hdrStats">
+        <div class="stat"><strong>—</strong> total SKUs</div>
+        <div class="stat"><strong>2</strong> cities</div>
+        <div class="stat"><strong>7</strong> days</div>
+      </div>
+      <div id="dayTabs"></div>
+    </div>
+  </div>
+
+  <div class="vtabs">
+    <div class="vtab active" data-v="sum"  onclick="sv('sum',this)">Summary</div>
+    <div class="vtab"        data-v="pkg1" onclick="sv('pkg1',this)">Package 1 — Broad</div>
+    <div class="vtab"        data-v="pkg2" onclick="sv('pkg2',this)">Package 2 — Price Fit</div>
+    <div class="vtab"        data-v="pkg3" onclick="sv('pkg3',this)">Package 3 — Strict ADO</div>
+    <div class="vtab"        data-v="pkg4" onclick="sv('pkg4',this)">Package 4 — Center</div>
+    <div class="vtab"        data-v="pkg5" onclick="sv('pkg5',this)">Package 5 — Rest</div>
+  </div>
+
+  <div id="body">
+
+    <!-- SUMMARY -->
+    <div id="vSum">
+      <div class="grid" id="sumPanels"><div class="loading">Loading…</div></div>
+    </div>
+
+    <!-- PKG 1 -->
+    <div id="vPkg1" style="display:none">
+      <div class="lcard c1">
+        <h3><span class="pbadge">Package 1 — Broadest</span> Most items · entry-level recommendation</h3>
+        <ul>
+          <li>Hai Phong → HN benchmark &nbsp;|&nbsp; Binh Duong → HCM benchmark · matched by L1+L2 category per weekday</li>
+          <li><strong>Filter:</strong> benchmark category <strong>pct50 gross_fs_ado ≥ 1.5</strong> — removes only very weak categories</li>
+          <li>No price constraint. Shows pct25/50/75/90/95 ADO + benchmark price range per category</li>
+          <li>Use ADO pill filters to narrow by demand tier · use price pills to see which items are price-competitive</li>
+        </ul>
+        <div class="tags"><span class="tag g">pct50 ADO ≥ 1.5</span><span class="tag g">No price filter</span><span class="tag b">Most items</span></div>
+      </div>
+      <div id="fbar1" class="fbar"></div>
+      <div class="twrap"><div id="tbl1" class="loading">Loading…</div></div>
+    </div>
+
+    <!-- PKG 2 -->
+    <div id="vPkg2" style="display:none">
+      <div class="lcard c2">
+        <h3><span class="pbadge">Package 2 — Price Fit</span> Package 1 scope · items with price-competitive SKUs only</h3>
+        <ul>
+          <li>Same benchmark mapping as Package 1 (pct50 ADO ≥ 1.5)</li>
+          <li><strong>Price filter:</strong> dish_price must be within <strong>±15%</strong> of benchmark discount_price at <strong>at least one</strong> of pct25/50/75/90/95</li>
+          <li>Shows which pct levels each item matches (<span style="background:#dcfce7;color:#166534;font-weight:600;padding:1px 5px;border-radius:3px;font-size:10px">pct50</span> badges). Items with no price match are excluded.</li>
+          <li>Use price-pct pills to filter by specific price tier match</li>
+        </ul>
+        <div class="tags"><span class="tag g">pct50 ADO ≥ 1.5</span><span class="tag r">dish_price ±15% vs benchmark</span><span class="tag g">Subset of Pkg 1</span></div>
+      </div>
+      <div id="fbar2" class="fbar"></div>
+      <div class="twrap"><div id="tbl2" class="loading">Loading…</div></div>
+    </div>
+
+    <!-- PKG 3 -->
+    <div id="vPkg3" style="display:none">
+      <div class="lcard c3">
+        <h3><span class="pbadge">Package 3 — Strictest ADO</span> Fewest items · highest-confidence picks</h3>
+        <ul>
+          <li>Same benchmark mapping</li>
+          <li><strong>Filter:</strong> benchmark category <strong>pct75 gross_fs_ado ≥ 4.0</strong> (top ~25% only)</li>
+          <li>Adds: district_name breakdown · top keywords per L2 · benchmark price range</li>
+          <li>Price match badges shown (±15% per pct) — use pills to filter by price tier</li>
+        </ul>
+        <div class="tags"><span class="tag r">pct75 ADO ≥ 4.0</span><span class="tag v">+ district</span><span class="tag v">+ keywords</span><span class="tag r">Fewest items</span></div>
+      </div>
+      <div id="fbar3" class="fbar"></div>
+      <div class="twrap"><div id="tbl3" class="loading">Loading…</div></div>
+    </div>
+
+    <!-- PKG 4 -->
+    <div id="vPkg4" style="display:none">
+      <div class="lcard c4">
+        <h3><span class="pbadge">Package 4 — Hourly · Center Districts</span> Package 3 logic × center zones</h3>
+        <ul>
+          <li>pct75 ADO ≥ 4.0 · <strong>Center districts only:</strong> Hai Phong → Ngo Quyen, Hong Bang, Le Chan &nbsp;|&nbsp; Binh Duong → Di An, Thuan An, Thu Dau Mot</li>
+          <li>Benchmark zones: <strong>HN & DN + OTH Center</strong> for Hai Phong &nbsp;|&nbsp; <strong>HCM & DN + OTH Center</strong> for Binh Duong</li>
+          <li>HTC table (below) shows recommended L2 per hour slot for center zones</li>
+          <li>Use hour-range pills to filter HTC recommendations by time of day</li>
+        </ul>
+        <div class="tags"><span class="tag r">pct75 ADO ≥ 4.0</span><span class="tag v">Center only</span><span class="tag b">Hourly L2 recs</span></div>
+      </div>
+      <div id="fbar4" class="fbar"></div>
+      <div class="twrap"><div id="tbl4" class="loading">Loading…</div></div>
+      <div class="htc-label">📅 Hourly L2 Category Recommendations (Center)</div>
+      <div class="htcwrap" id="htc4"><div class="loading">Loading HTC data…</div></div>
+    </div>
+
+    <!-- PKG 5 -->
+    <div id="vPkg5" style="display:none">
+      <div class="lcard c5">
+        <h3><span class="pbadge">Package 5 — Hourly · Rest Districts</span> Package 3 logic × non-center zones</h3>
+        <ul>
+          <li>pct75 ADO ≥ 4.0 · <strong>Non-center districts:</strong> Hai Phong → Hai An, Kien An, An Duong, Thuy Nguyen &nbsp;|&nbsp; Binh Duong → Ben Cat, Tan Uyen</li>
+          <li>Benchmark zones: <strong>HN & DN + OTH Rest</strong> / <strong>HCM & DN + OTH Rest</strong></li>
+        </ul>
+        <div class="tags"><span class="tag r">pct75 ADO ≥ 4.0</span><span class="tag b">Non-center</span><span class="tag b">Hourly L2 recs</span></div>
+      </div>
+      <div id="fbar5" class="fbar"></div>
+      <div class="twrap"><div id="tbl5" class="loading">Loading…</div></div>
+      <div class="htc-label">📅 Hourly L2 Category Recommendations (Rest)</div>
+      <div class="htcwrap" id="htc5"><div class="loading">Loading HTC data…</div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- KEYWORD PANEL -->
+<div id="kwPanel">
+  <div class="kwhdr"><h3>🔑 Top Keywords by L2</h3><button class="kwclose" onclick="closeKw()">✕</button></div>
+  <div class="kwbody" id="kwBody"></div>
+</div>
+
+<script>
+const DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const FULL={Mon:'Monday',Tue:'Tuesday',Wed:'Wednesday',Thu:'Thursday',Fri:'Friday',Sat:'Saturday',Sun:'Sunday'};
+const WKND=new Set(['Sat','Sun']);
+const PCT_LBLS=['pct25','pct50','pct75','pct90','pct95'];
+
+let activeDay='Mon', activeView='sum';
+let SUMMARY=null, KW=null, HTC_RAW=null, L1LIST=[];
+const HTC_MAP={"HN":{"weekday":{"5h-9h":{"center":["Cà phê","Bánh mì","Bánh cuốn/ Bánh ướt","Cháo","Xôi","Bánh bao","Bánh Âu Á - Khác","Nước ép","Sữa","Bún","Mì","Nem, chả, thịt nguội","Đồ uống không cồn khác - Khác","Phở","Bánh đa","Món Trung"],"rest":["Bún","Phở","Bánh canh","Bún/Phở/ Mì - Khác","Bánh mì","Cà phê","Cháo","Bánh cuốn/ Bánh ướt","Xôi","Bánh bao","Bánh đa","Món Trung","Nem, chả, thịt nguội","Bánh Âu Á - Khác","Miến","Bánh giò","Bánh kem","Heo, Bò","Soup","Nước ép","Đồ ăn dinh dưỡng - Khác","Trứng","Sữa","Bánh su"]},"9h-10h":{"center":["Cà phê","Trà Sữa","Bánh mì","Trà - Khác","Cháo","Bánh Âu Á - Khác","Nước ép","Các món cuốn","Món Hàn","Đồ uống không cồn khác - Khác","Sữa","Cơm - Không, trắng, cháy","Bún","Mì","Bún đậu","Xôi","Gà rán","Donut","Bánh bông lan","Salad","Bánh bao","Bánh cuốn/ Bánh ướt","Nem, chả, thịt nguội","Bánh giò","unk","Bánh kem","Soup","Thức uống lên men","Bánh su","Hủ tiếu","Đồ ăn dinh dưỡng - Khác","Rau gia vị"],"rest":["Bún","Mì","Phở","Bánh canh","Bánh cuốn/ Bánh ướt","Bánh bao","Cà phê","Bánh mì","Cháo","Bánh Âu Á - Khác","Trà - Khác","Xôi","Bánh kem","Nước ép","Bánh đa","Đồ uống không cồn khác - Khác","Nem, chả, thịt nguội","Bánh su","Món Trung","Soup","Bánh giò","Sữa","Trứng","Nấm","Salad"]},"10h-12h":{"center":["Cơm - Không, trắng, cháy","Bún","Mì","Gà rán","Cơm thố/ Cơm niêu","Món Hàn","Cháo","Burger","Các món cuốn","Phở","Cơm chiên","Gà, Vịt","Bánh đa","Xôi","Bún đậu","Miến","Món Âu","Pizza","Món Nhật","Bánh canh","Chè","Salad","Rau, Củ, Quả","Nấm","Rau gia vị","Poke","Đồ ăn dinh dưỡng - Khác","Trà Sữa","Bánh mì"],"rest":["Bún","Cơm - Không, trắng, cháy","Cơm thố/ Cơm niêu","Các món cuốn","Burger","Món Hàn","Phở","Bún đậu","Bánh đa","Cháo","Cơm chiên","Miến","Gà rán","Món Nhật","Nước uống đóng chai","Bánh canh","Bánh cuốn/ Bánh ướt","Rau, Củ, Quả","Cơm trộn","Hủ tiếu","Salad","Nem, chả, thịt nguội","Others","Soup","Bún/Phở/ Mì - Khác","Heo, Bò","Món Trung","Nấm","Bia","Món Thái","Đồ ăn dinh dưỡng - Khác","Trứng","Bánh hỏi","Waffle","Đậu hũ","f9a. Gỏi ăn vặt","Đồ ăn nhanh - Khác","Poke","Rau gia vị"]},"12h-13h":{"center":["Cơm - Không, trắng, cháy","Bún","Trà Sữa","Mì","Gà rán","Cơm thố/ Cơm niêu","Món Hàn","Burger","Các món cuốn","Cháo","Gà, Vịt","Cơm chiên","Món Âu","Chè","Pizza","Món Nhật","Bánh Âu Á - Khác","Miến","Bánh cuốn/ Bánh ướt","Xiên que/ Viên chiên","Bánh canh","Đồ uống không cồn khác - Khác","Salad","Rau, Củ, Quả","Nấm","Phở","Xôi","Bánh đa","Bún đậu","Nước ép"],"rest":["Cơm - Không, trắng, cháy","Bún","Cơm thố/ Cơm niêu","Burger","Món Hàn","Gà rán","Bún đậu","Các món cuốn","Cơm chiên","Phở","Bánh đa","Bánh canh","Cơm trộn","Món Nhật","Miến","Hủ tiếu","Salad","Nem, chả, thịt nguội","Món Âu","Rau, Củ, Quả","Trứng"]},"13h-16h":{"center":["Trà Sữa","Cà phê","Chè","Bánh tráng","Nước ép","Bánh Âu Á - Khác","Các món cuốn","Cháo","Nem chua","Trái cây","Bánh gà","Đồ uống không cồn khác - Khác","Xiên que/ Viên chiên","Sữa chua","Sữa","Rau câu & flan","Đồ ăn vặt - Khác","Đậu hũ/Tào phớ","Bánh cuốn/ Bánh ướt","Bánh su","Gỏi","Salad","Thức uống lên men","Donut","Bánh bông lan","Đồ ăn dinh dưỡng - Khác","Rau, Củ, Quả","Poke"],"rest":["Trà Sữa","Cà phê","Chè","Trà - Khác","Nước ép","Bánh Âu Á - Khác","Bánh tráng","Trà trái cây","Bánh truyền thống - Khác","Trái cây","Đồ uống không cồn khác - Khác","Nem chua","Sữa chua","Rau câu & flan","Đậu hũ/Tào phớ","Bánh gà","Bánh kem","Sữa","Bánh su","Bánh bông lan","Gỏi","Kem","Donut"]},"16h-17h":{"center":["Trà Sữa","Gà rán","Bánh tráng","Chè","Gà, Vịt","Cháo","Bánh truyền thống - Khác","Burger","Món Hàn","Bánh Âu Á - Khác","Các món cuốn","Nem chua","Bánh gà","Nước ép","Pizza","Xiên que/ Viên chiên","Món Âu","Hải sản","Món Nhật","Nướng","Bánh kem","Nem, chả, thịt nguội","Đồ uống không cồn khác - Khác","Đồ ăn vặt - Khác","Gỏi","Sữa chua","Bánh bao","Heo, Bò","Đậu hũ/Tào phớ","Món Trung","Rau câu & flan","Bánh su","Sữa","Lẩu","Thức uống lên men","Donut","Kem","Salad","Hotdog","Soup","Khoai các loại","Bánh xèo/ Bánh khọt","Bánh bông lan","Cơm cháy","Bánh bèo/nậm/lọc","Bánh trứng"],"rest":["Trà Sữa","Bánh tráng","Gà rán","Bánh Âu Á - Khác","Chè","Bánh truyền thống - Khác","Pizza","Nem chua","Trà - Khác","Bánh kem","Xiên que/ Viên chiên","Trái cây","Đồ ăn vặt - Khác","Burger","Bánh gà","Nước ép","Lẩu"]},"17h-20h":{"center":["Cơm - Không, trắng, cháy","Mì","Bún","Gà rán","Gà, Vịt","Món Hàn","Burger","Cơm thố/ Cơm niêu","Cháo","Các món cuốn","Phở","Cơm chiên","Pizza","Món Âu","Bún đậu","Món Nhật","Nướng","Hải sản","Nem chua","Xiên que/ Viên chiên","Salad","Cơm trộn","Khoai các loại","Bánh xèo/ Bánh khọt","Hủ tiếu","Rau, Củ, Quả","Others","Nấm","Poke"],"rest":["Gà rán","Cơm - Không, trắng, cháy","Gà, Vịt","Burger","Pizza","Món Hàn","Các món cuốn","Bún đậu","Cơm thố/ Cơm niêu","Lẩu","Món Nhật","Nướng","Cơm chiên","Heo, Bò","Hải sản","Món Âu","Bánh xèo/ Bánh khọt"]},"20h-22h":{"center":["Trà Sữa","Chè","Mì","Gà rán","Gà, Vịt","Bún","Burger","Món Hàn","Bánh tráng","Nước ép","Bánh Âu Á - Khác","Nướng","Nem chua","Xiên que/ Viên chiên","Món Âu","Trái cây","Heo, Bò","Đồ ăn vặt - Khác","Đồ uống không cồn khác - Khác","Sữa chua","Bánh kem","Đậu hũ/Tào phớ","Sữa","Rau câu & flan","Kem","Bánh su","Salad","Soup","Sinh tố","Thức uống lên men","Bánh bông lan","Đồ ăn dinh dưỡng - Khác","Cơm - Không, trắng, cháy","Bánh mì","Cơm thố/ Cơm niêu","Phở","Cháo","Xôi","Trà trái cây","Trà - Khác","Các món cuốn","Cơm chiên"],"rest":["Trà Sữa","Gà, Vịt","Chè","Mì","Trà trái cây","Trái cây","Bánh tráng","Hải sản","Nem chua","Cơm chiên","Nướng","Sữa chua","Rau câu & flan","Bánh kem"]},"22h-5h":{"center":["Mì","Gà, Vịt","Gà rán","Bánh mì","Xôi","Cháo","Bánh tráng","Chè","Nướng","Xiên que/ Viên chiên","Món Hàn","Cơm chiên","Trái cây","Nem chua","Món Âu","Hải sản","Bánh cuốn/ Bánh ướt","Nước uống đóng chai","Phở","Heo, Bò","Trà trái cây","Nước ép","Trà Sữa","Đồ ăn vặt - Khác","Đậu hũ/Tào phớ","Kem","a9a. Nui","Sữa chua"],"rest":["Mì","Gà, Vịt","Xiên que/ Viên chiên","Trái cây","Trà Sữa","Hải sản","Bánh tráng","Nướng","Trà trái cây","Xôi","Nước ép","Cơm chiên","Chè","Đồ ăn vặt - Khác","Heo, Bò","Nem chua","Cháo","Bánh cuốn/ Bánh ướt","Gà rán","Các món cuốn","Sữa chua","Món Nhật","Món Âu","Bánh truyền thống - Khác","Món Trung"]}},"weekend":{"0h-6h":{"center":["Phở","Mì","Burger","Xôi","Bánh mì","Cơm - Không, trắng, cháy","Món Âu","Bánh đa","Nước uống đóng chai","Bánh tráng","Đồ uống không cồn khác - Khác","Đậu hũ/Tào phớ","Nướng","a9a. Nui","Cơm chiên","Trà trái cây","Cơm trộn","Gà rán","Pizza","Xiên que/ Viên chiên","Nem chua","Khoai các loại","Bánh gà","Gà, Vịt","Hải sản","Heo, Bò","Thịt đặc sản","Món Hàn","Cháo","Trái cây","Nước ép","Bánh kem","Rau, Củ, Quả"],"rest":["Gà, Vịt","Trà Sữa","Xiên que/ Viên chiên","Cháo","Bánh cuốn/ Bánh ướt","Các món cuốn","Heo, Bò","Đồ ăn vặt - Khác","Gà rán","Món Hàn","Bún đậu","Hải sản","Trái cây","Sinh tố","Sữa chua","Mì","Miến","Trà trái cây","Xôi","Pizza","Khoai các loại","Bánh mì","Bánh bao","Món Nhật","Gỏi","Kem","Nước ép","Bánh trứng","Nướng","Sữa","Salad","Thức uống lên men"]},"6h-10h":{"center":["Cà phê","Xôi","Bánh bao","Mì","Nem, chả, thịt nguội","Sữa","Đồ uống không cồn khác - Khác","Bánh truyền thống - Khác","Bánh canh","Chè","Bánh đa","Miến","Cơm - Không, trắng, cháy","Bánh giò","Bún","Phở","Hủ tiếu","Cơm trộn","Bánh mì","Bánh cuốn/ Bánh ướt","Bánh bèo/nậm/lọc","Bánh gà","Hải sản","Món Trung","Cháo","Soup","Nước ép","Bánh Âu Á - Khác","Bánh kem","Bánh bông lan","Bánh su","Donut","Đồ ăn dinh dưỡng - Khác","Thức uống lên men","v. Đậu hũ"],"rest":["Bánh mì","Gà rán","Cháo","Trà Sữa","Burger","Bún","Các món cuốn","Cơm chiên","Cơm thố/ Cơm niêu","Món Hàn","Trà trái cây","Phở","Bánh canh","Hủ tiếu","Bún/Phở/ Mì - Khác","Bánh đa","Miến","Xôi","Cà phê","Bánh cuốn/ Bánh ướt","Bánh truyền thống - Khác","Bánh bao","Bánh giò","Nem, chả, thịt nguội","Trứng","Món Nhật","Món Trung","Soup","Nước ép","Bánh Âu Á - Khác","Bánh kem","Bánh bông lan","Bánh su","Donut","Bánh trứng","Đồ uống không cồn khác - Khác","Nấm","Sữa","Đồ ăn dinh dưỡng - Khác"]},"10h-13h":{"center":["Cơm - Không, trắng, cháy","Mì","Xôi","Bún","Món Âu","Bánh mì","Bánh đa","Miến","Bánh canh","Cơm chiên","Trà - Khác","Bánh gà","Nem, chả, thịt nguội","Bún đậu","Phở","Hủ tiếu","Bún/Phở/ Mì - Khác","Cơm thố/ Cơm niêu","Cơm trộn","Gà rán","Burger","Pizza","Hotdog","Các món cuốn","Bánh cuốn/ Bánh ướt","Bánh bao","Bánh bèo/nậm/lọc","Gà, Vịt","Hải sản","Heo, Bò","Thịt đặc sản","Món Hàn","Món Nhật","Món Trung","Món Thái","Cháo","Sinh tố","Bánh kem","Bánh su","Lẩu","Rau, Củ, Quả","Nấm","Sữa","Salad","Đồ ăn dinh dưỡng - Khác","Poke","v. Đậu hũ"],"rest":["Gà rán","Cơm thố/ Cơm niêu","Bún đậu","Trà Sữa","Các món cuốn","Burger","Pizza","Gà, Vịt","Món Hàn","Heo, Bò","Trà trái cây","Lẩu","Nước uống đóng chai","Bánh xèo/ Bánh khọt","Cơm trộn","Bún","Phở","Bánh canh","Hủ tiếu","Bún/Phở/ Mì - Khác","Bánh đa","Miến","Cơm - Không, trắng, cháy","Cơm chiên","Cơm - Khác","Hotdog","Bánh cuốn/ Bánh ướt","Bánh bao","Bánh bèo/nậm/lọc","Nem, chả, thịt nguội","Trứng","Món Âu","Món Nhật","Món Trung","Món Thái","Cháo","Soup","Rau, Củ, Quả","Nấm","Sữa","Salad","Đồ ăn dinh dưỡng - Khác","Poke"]},"13h-16h":{"center":["Cà phê","Bánh tráng","Bánh gà","Trà - Khác","Bánh truyền thống - Khác","Món Âu","Bánh mì","Bánh đa","Chè","Nem chua","Cháo","Đồ uống không cồn khác - Khác","unk","Bánh Âu Á - Khác","Nem, chả, thịt nguội","Trà Sữa","Trà trái cây","Gà rán","Hotdog","Các món cuốn","Xiên que/ Viên chiên","Đồ ăn vặt - Khác","Khoai các loại","Các loại trứng","f9a. Gỏi ăn vặt","Bánh bao","Bánh bèo/nậm/lọc","Bánh giò","Thịt đặc sản","Món Hàn","Món Thái","Ẩm thực quốc tế - Khác","Gỏi","Trái cây","Sữa chua","Đậu hũ/Tào phớ","Kem","Rau câu & flan","Tráng miệng - Khác","Nước ép","Sinh tố","Bánh kem","Bánh bông lan","Bánh su","Donut","Sữa","Salad","Đồ ăn dinh dưỡng - Khác","Poke","Thức uống lên men","v. Đậu hũ"],"rest":["Trà Sữa","Gà rán","Bún đậu","Cơm thố/ Cơm niêu","Burger","Gà, Vịt","Cơm - Không, trắng, cháy","Món Hàn","Trái cây","Bún","Cơm trộn","Bánh xèo/ Bánh khọt","Trà - Khác","Trà trái cây","Hotdog","Cà phê","Bánh tráng","Xiên que/ Viên chiên","Đồ ăn vặt - Khác","Nem chua","Khoai các loại","Bánh mì","Bánh truyền thống - Khác","Bánh bao","Bánh bèo/nậm/lọc","Bánh gà","Bánh giò","Trứng","Món Thái","Ẩm thực quốc tế - Khác","Gỏi","Chè","Sữa chua","Đậu hũ/Tào phớ","Kem","Rau câu & flan","Nước ép","Sinh tố","Bánh Âu Á - Khác","Bánh kem","Bánh bông lan","Bánh su","Donut","Đồ uống không cồn khác - Khác","Sữa","Đồ ăn dinh dưỡng - Khác","Poke"]},"16h-20h":{"center":["Cơm - Không, trắng, cháy","Xôi","Món Âu","Mì","Bánh tráng","Bánh gà","Nem chua","Bánh mì","Bánh truyền thống - Khác","Chè","unk","Trà - Khác","Bánh canh","Xiên que/ Viên chiên","Bún đậu","Bún/Phở/ Mì - Khác","Miến","Trà Sữa","Cơm thố/ Cơm niêu","Cơm chiên","Gà rán","Burger","Pizza","Hotdog","Các món cuốn","Đồ ăn vặt - Khác","Khoai các loại","Các loại trứng","Bánh xèo/ Bánh khọt","Bánh bèo/nậm/lọc","Gà, Vịt","Hải sản","Heo, Bò","Thịt đặc sản","Món Hàn","Món Nhật","Món Trung","Món Thái","Ẩm thực quốc tế - Khác","Cháo","Soup","Gỏi","Trái cây","Sữa chua","Đậu hũ/Tào phớ","Kem","Rau câu & flan","Nước ép","Bánh Âu Á - Khác","Bánh kem","Bánh bông lan","Bánh su","Donut"],"rest":["Gà rán","Trà Sữa","Gà, Vịt","Bún đậu","Pizza","Burger","Cơm thố/ Cơm niêu","Các món cuốn","Lẩu","Món Hàn","Bánh xèo/ Bánh khọt","Trà trái cây","Cơm trộn","Heo, Bò","Rau, Củ, Quả","Bánh canh","Hủ tiếu","Bún/Phở/ Mì - Khác","Bánh đa","Miến","Trà - Khác","Cơm - Không, trắng, cháy","Cơm chiên","Cơm - Khác","Hotdog","Bánh tráng","Xiên que/ Viên chiên","Đồ ăn vặt - Khác","Nem chua","Khoai các loại","Bánh truyền thống - Khác","Bánh bèo/nậm/lọc","Bánh gà","Bánh giò","Hải sản","Trứng","Thịt đặc sản","Món Âu","Món Nhật","Món Trung","Món Thái","Ẩm thực quốc tế - Khác","Cháo","Soup","Gỏi","Chè","Trái cây","Sữa chua","Đậu hũ/Tào phớ","Rau câu & flan","Tráng miệng - Khác","Bánh Âu Á - Khác","Bánh kem"]},"20h-24h":{"center":["Xôi","Phở","Bánh tráng","Chè","Nướng","Món Âu","Nem chua","Burger","Bánh Âu Á - Khác","Trà - Khác","Mì","Bánh đa","Nước uống đóng chai","Đồ uống không cồn khác - Khác","Bánh canh","a9a. Nui","Trà Sữa","Trà trái cây","Cơm chiên","Gà rán","Pizza","Hotdog","Xiên que/ Viên chiên","Đồ ăn vặt - Khác","Khoai các loại","Các loại trứng","f9a. Gỏi ăn vặt","Bánh cuốn/ Bánh ướt","Bánh gà","Gà, Vịt","Hải sản","Heo, Bò","Món Hàn","Món Thái","Ẩm thực quốc tế - Khác","Cháo","Soup","Trái cây","Sữa chua","Đậu hũ/Tào phớ","Kem","Rau câu & flan","Tráng miệng - Khác","Nước ép","Sinh tố","Bánh kem","Bánh bông lan","Bánh su","Bánh trứng","Sữa","Salad","Thức uống lên men"],"rest":["Trà Sữa","Gà, Vịt","Bún đậu","Gà rán","Các món cuốn","Bún","Hải sản","Cơm thố/ Cơm niêu","Trái cây","Món Hàn","Pizza","Lẩu","Cơm trộn","Trà trái cây","Bánh kem","Mì","Bún/Phở/ Mì - Khác","Cơm chiên","Xôi","Bánh tráng","Xiên que/ Viên chiên","Đồ ăn vặt - Khác","Nem chua","Bánh cuốn/ Bánh ướt","Bánh xèo/ Bánh khọt","Bánh gà","Trứng","Thịt đặc sản","Món Trung","Món Thái","Cháo","Chè","Sữa chua","Đậu hũ/Tào phớ","Kem","Rau câu & flan","Nước ép","Sinh tố","Bánh bông lan","Nướng","Đồ uống không cồn khác - Khác","Sữa","Thức uống lên men"]}}},"HCM":{"weekday":{"5h-9h":{"center":["Hủ tiếu","Cháo","Xôi","Nem, chả, thịt nguội","Bánh cuốn/ Bánh ướt","Phở","Soup","Bún/Phở/ Mì - Khác","Bánh bao","Bánh bèo/nậm/lọc","Sữa","Miến","a9a. Nui","Bánh hỏi","Cơm nắm","Cà phê","Bánh mì","Bún","Hủ tiếu","Cháo","Xôi","Mì","Nem, chả, thịt nguội","Bánh cuốn/ Bánh ướt","Phở","Soup","Bánh Âu Á - Khác","Bánh bao","Món Trung","Bánh bèo/nậm/lọc","Rau, Củ, Quả","Sữa"],"rest":["Cà phê","Bún","Bánh mì","Cháo","Bánh cuốn/ Bánh ướt","Phở","Hủ tiếu","Soup","Bánh kem","Nem, chả, thịt nguội","Bánh hỏi","Bánh bèo/nậm/lọc","Xôi","Bánh canh","Bánh bao","Bún/Phở/ Mì - Khác","Bánh truyền thống - Khác","Cơm nắm","a9a. Nui","Sữa","Miến","Bánh đa"]},"9h-10h":{"center":["Bánh mì","Bún","Trà - Khác","Đồ uống không cồn khác - Khác","Bánh Âu Á - Khác","Món Hàn","Soup","Các món cuốn","Bánh kem","Rau, Củ, Quả","Nướng","Trái cây","Bánh bao","Salad","Cháo","Xôi","Nước ép","Gà rán","Bánh canh","Bánh cuốn/ Bánh ướt","Nem, chả, thịt nguội","Phở","Burger","Món Trung","Bánh truyền thống - Khác","Sinh tố","Sữa","Bánh bông lan","Bánh giò","Waffle","Đậu hũ","Donut","Đồ ăn dinh dưỡng - Khác","Sữa chua","Cơm - Khác","Bánh su","Cơm cháy"],"rest":["Trà Sữa","Cà phê","Cơm - Không, trắng, cháy","Trà - Khác","Mì","Gà rán","Trà trái cây","Burger","Đồ uống không cồn khác - Khác","Món Hàn","Bánh Âu Á - Khác","Nướng","Trái cây","Bún đậu","Bánh xèo/ Bánh khọt","Rau, Củ, Quả","Cơm thố/ Cơm niêu","Món Nhật","Salad","Bánh bông lan","Đồ ăn dinh dưỡng - Khác","Đậu hũ","Bánh mì","Bún","Bánh cuốn/ Bánh ướt","Hủ tiếu","Phở","Cháo","Xôi","Bánh canh","Soup","Bánh bao","Bún/Phở/ Mì - Khác","Bánh hỏi","Nước ép","Bánh truyền thống - Khác","Bánh kem","Cơm nắm","Sữa"]},"10h-12h":{"center":["Gà rán","Hủ tiếu","Món Hàn","Cháo","Các món cuốn","Hải sản","Burger","Rau, Củ, Quả","Đồ uống không cồn khác - Khác","Bún đậu","Nem, chả, thịt nguội","Phở","Bún/Phở/ Mì - Khác","Món Âu","Nướng","Gà, Vịt","Salad","Món Trung","Heo, Bò","Cơm chiên","Món Nhật","Miến","Pizza","Bánh bèo/nậm/lọc","Cơm thố/ Cơm niêu","Trứng","a9a. Nui","Bánh xèo/ Bánh khọt","Cơm - Khác","Poke","Ẩm thực quốc tế - Khác","Đồ ăn dinh dưỡng - Khác","Nấm"],"rest":["Cơm - Không, trắng, cháy","Bún","Gà rán","Mì","Burger","Bánh canh","Món Hàn","Bún đậu","Các món cuốn","Hải sản","Cơm chiên","Phở","Bánh tráng","Gà, Vịt","Món Âu","Nướng","Heo, Bò","Rau, Củ, Quả","Pizza","Cơm thố/ Cơm niêu","Bún/Phở/ Mì - Khác","Món Nhật","Xiên que/ Viên chiên","Lẩu","Bánh xèo/ Bánh khọt","Hủ tiếu","Bánh cuốn/ Bánh ướt","Salad","Cơm trộn","Bánh hỏi","Nem, chả, thịt nguội","Miến","Đồ ăn dinh dưỡng - Khác","Nấm","Bánh đa","Trứng","Bánh bèo/nậm/lọc","Rau gia vị","Sinh tố","Poke","Đồ ăn nhanh - Khác"]},"12h-13h":{"center":["Trà - Khác","Gà rán","Món Hàn","Các món cuốn","Hủ tiếu","Burger","Bánh canh","Cháo","Bún đậu","Rau, Củ, Quả","Món Âu","Gà, Vịt","Cơm chiên","Món Nhật","Salad","Pizza","Poke","Món Âu","Cơm chiên","Miến","Đồ uống không cồn khác - Khác"],"rest":["Cơm - Không, trắng, cháy","Trà Sữa","Bún","Gà rán","Mì","Trà - Khác","Burger","Món Hàn","Bánh tráng","Đồ uống không cồn khác - Khác","Món Âu","Rau, Củ, Quả","Trái cây","Bánh Âu Á - Khác","Salad","Bột chiên","Sữa","Kem","Cơm chiên","Cơm thố/ Cơm niêu","Bún đậu","Các món cuốn","Bánh canh","Bún/Phở/ Mì - Khác","Cơm trộn","Trứng","Bánh hỏi","Miến","Đồ ăn dinh dưỡng - Khác","Nấm","Bánh đa","Rau gia vị","Poke","Ẩm thực quốc tế - Khác","unk","Đồ ăn nhanh - Khác","f9b. Phô mai que","Cupcake"]},"13h-16h":{"center":["Bánh tráng","Trà trái cây","Đồ uống không cồn khác - Khác","Chè","Trái cây","Bánh Âu Á - Khác","Đồ ăn vặt - Khác","Đậu hũ/Tào phớ","Xiên que/ Viên chiên","Nướng","Bánh kem","Món Âu","Bánh bèo/nậm/lọc","Khoai các loại","Bánh bông lan","f9a. Gỏi ăn vặt","Donut","Sữa","Đậu hũ","Bột chiên","Rau câu & flan","Hotdog","Sữa chua","Kem","Bánh su","Cơm cháy","Waffle","Các loại trứng","Nem chua","Cupcake","f9b. Phô mai que","Tráng miệng - Khác","Bánh trứng","Sinh tố","Nước ép","Bánh truyền thống - Khác"],"rest":["Trà Sữa","Cà phê","Bánh tráng","Trà trái cây","Nước ép","Đồ uống không cồn khác - Khác","Trái cây","Chè","Xiên que/ Viên chiên","Bánh Âu Á - Khác","Đồ ăn vặt - Khác","Bánh truyền thống - Khác","Bánh cuốn/ Bánh ướt","Sinh tố","Bánh kem","Bánh bèo/nậm/lọc","Sữa chua","Khoai các loại","Bột chiên","Rau câu & flan","Sữa","Bánh bông lan","Kem","Đậu hũ","Đậu hũ/Tào phớ","Hotdog","Cơm cháy","f9a. Gỏi ăn vặt","Các loại trứng","Donut","Bánh su","Waffle","Bánh trứng","Tráng miệng - Khác","Bánh gà","Cupcake","f9b. Phô mai que"]},"16h-17h":{"center":["Gà rán","Bánh mì","Đồ ăn vặt - Khác","Bánh truyền thống - Khác","Trà trái cây","Nướng","Gà, Vịt","Nem, chả, thịt nguội","Đậu hũ/Tào phớ","Xiên que/ Viên chiên","Món Nhật","Pizza","Khoai các loại","Bánh Âu Á - Khác","Hải sản","f9a. Gỏi ăn vặt","Bánh kem","Bánh xèo/ Bánh khọt","Món Âu","Xôi","Lẩu","Hotdog","Mì","Cháo","Burger","Hủ tiếu","Chè","Rau, Củ, Quả","Soup","Heo, Bò","Món Trung","Sinh tố","Cơm chiên","Salad","Bánh bông lan","Donut"],"rest":["Bánh tráng","Gà rán","Pizza","Các món cuốn","Món Hàn","Bánh Âu Á - Khác","Burger","Món Nhật","Món Âu","Bánh xèo/ Bánh khọt","Bánh truyền thống - Khác","Hải sản","Nướng","Lẩu","Heo, Bò","Đồ ăn vặt - Khác","Khoai các loại","Bánh kem","Chè","Món Trung","Gà, Vịt","Bột chiên","Rau, Củ, Quả","Bánh bèo/nậm/lọc","Hotdog","unk","Nem, chả, thịt nguội","Soup","f9a. Gỏi ăn vặt","Bánh bông lan","Nem chua","Gỏi","Rau câu & flan","Donut","Kem","Thịt đặc sản","Trái cây","Others","Các loại trứng","Bánh su","Bánh bao","Cơm đặc sản"]},"17h-20h":{"center":["Mì","Gà, Vịt","Hải sản","Bún đậu","Nướng","Pizza","Món Âu","Xiên que/ Viên chiên","Món Nhật","Burger","Lẩu","Heo, Bò","Đồ ăn vặt - Khác","Bánh xèo/ Bánh khọt","Cơm chiên","Món Trung","Cơm - Không, trắng, cháy","Bún","Cháo","Hủ tiếu","Bánh canh","Phở","Cơm thố/ Cơm niêu","Thịt đặc sản","Cơm - Khác","Trứng","Bột chiên","Các món cuốn","Chè","Khoai các loại","Hotdog","Gỏi","f9a. Gỏi ăn vặt"],"rest":["Gà rán","Bún đậu","Mì","Món Hàn","Nướng","Pizza","Món Nhật","Burger","Gà, Vịt","Bánh tráng","Hải sản","Lẩu","Bánh xèo/ Bánh khọt","Heo, Bò","Món Âu","Các món cuốn","Cơm chiên","Chè","Rau, Củ, Quả","Đồ ăn vặt - Khác","Món Trung","Gỏi","Bột chiên","Cơm thố/ Cơm niêu","Hotdog","Thịt đặc sản","Nem, chả, thịt nguội","f9a. Gỏi ăn vặt","Bánh bông lan","Cơm cháy","Các loại trứng","Nem chua","Others","Kem"]},"20h-22h":{"center":["Xiên que/ Viên chiên","Hải sản","Gà, Vịt","Trà trái cây","Đồ ăn vặt - Khác","Mì","Chè","Trái cây","Nướng","Bún đậu","Burger","Cháo","Đậu hũ/Tào phớ","Món Nhật","Cơm chiên","Pizza","Đồ uống không cồn khác - Khác","Bánh Âu Á - Khác","Soup","Bánh bông lan","Donut","Sữa","Kem","Sữa chua","Các loại trứng","Bột chiên","Cơm - Khác"],"rest":["Trà Sữa","Bánh tráng","Gà rán","Xiên que/ Viên chiên","Mì","Gà, Vịt","Bún đậu","Chè","Đồ ăn vặt - Khác","Trái cây","Hải sản","Trà trái cây","Nướng","Món Nhật","Món Trung","Lẩu","Pizza","Burger","Món Hàn","Nước ép","Các loại trứng","Cơm cháy","Heo, Bò","Bột chiên","Sữa chua","Món Âu","Đậu hũ/Tào phớ","Đồ uống không cồn khác - Khác","Nem chua","Rau câu & flan","Kem","Bánh xèo/ Bánh khọt","Bánh kem","Gỏi"]},"22h-5h":{"center":["Burger","Đồ ăn vặt - Khác","Gà, Vịt","Nướng","Hải sản","Cháo","Hủ tiếu","Trái cây","Gà rán","Cơm chiên","Bún đậu","Phở","Trà trái cây","Heo, Bò","Soup","Các loại trứng","Lẩu","Xôi","Đồ uống không cồn khác - Khác","Bánh kem","Chè","Bánh bông lan","Cơm thố/ Cơm niêu","Bánh xèo/ Bánh khọt","Bánh trứng"],"rest":["Xiên que/ Viên chiên","Bánh tráng","Mì","Gà, Vịt","Trái cây","Cháo","Đồ ăn vặt - Khác","Hải sản","Nướng","Bún đậu","Món Trung","Chè","Các loại trứng","Trà trái cây","Phở","Hủ tiếu","Cơm cháy","a9a. Nui","Bánh mì","Bột chiên","Heo, Bò","Sinh tố","Lẩu","Nước ép","Xôi","Thịt đặc sản","Sữa chua","Nước uống đóng chai","Kem","Bánh kem","Pizza","Trứng","Gỏi","Others","Waffle"]}},"weekend":{"0h-6h":{"center":["Hủ tiếu","Burger","Bún","Nướng","Cà phê","Bánh canh","Đồ uống không cồn khác - Khác","Bánh cuốn/ Bánh ướt","Trà - Khác","Cháo","Bánh kem","Cơm - Không, trắng, cháy","Nem, chả, thịt nguội","Món Trung","Heo, Bò","Soup","Mì","Bún đậu","Phở","Bún/Phở/ Mì - Khác","a9a. Nui","Trà Sữa","Cơm chiên","Xôi","Gà rán","Pizza","Hotdog","Bánh tráng","Xiên que/ Viên chiên","Đồ ăn vặt - Khác","Cơm cháy","Bánh mì","Bánh truyền thống - Khác","Bánh xèo/ Bánh khọt","Bánh bao","Gà, Vịt","Hải sản","Trứng","Thịt đặc sản","Món Hàn","Món Thái","Ẩm thực quốc tế - Khác","Trái cây","Kem","Nước ép","Bánh bông lan","Lẩu","Sữa"],"rest":["Xiên que/ Viên chiên","Mì","Trà trái cây","Gà rán","Gà, Vịt","Bún đậu","Đồ ăn vặt - Khác","Pizza","Cơm chiên","Các món cuốn","Chè","Trái cây","Món Hàn","Bột chiên","Bánh tráng","Bánh truyền thống - Khác","Bún","Phở","Bánh canh","Hủ tiếu","Bún/Phở/ Mì - Khác","a9a. Nui","Trà Sữa","Cơm - Không, trắng, cháy","Xôi","Cơm đặc sản","Burger","Nem chua","Các loại trứng","Bánh mì","Bánh cuốn/ Bánh ướt","Bánh xèo/ Bánh khọt","Bánh bao","Bánh gà","Hải sản","Heo, Bò","Trứng","Thịt đặc sản","Món Trung","Món Thái","Cháo","Soup","Sữa chua","Kem","Nước ép","Sinh tố","Donut","Waffle","Nướng","Lẩu","Nước uống đóng chai"]},"6h-10h":{"center":["Bánh mì","Nem, chả, thịt nguội","Cà phê","Xôi","Cơm - Không, trắng, cháy","Hủ tiếu","Đồ uống không cồn khác - Khác","Rau, Củ, Quả","Nước ép","Món Trung","Sinh tố","Bánh kem","Miến","Bánh tráng","Các món cuốn","Món Âu","Bún","Mì","Phở","Bánh canh","Bún/Phở/ Mì - Khác","Bánh đa","a9a. Nui","Trà Sữa","Trà - Khác","Cơm nắm","Bánh cuốn/ Bánh ướt","Bánh truyền thống - Khác","Bánh bao","Bánh bèo/nậm/lọc","Bánh hỏi","Bánh giò","Heo, Bò","Cháo","Soup","Bánh Âu Á - Khác","Waffle","Nước uống đóng chai","Sữa","Đồ ăn dinh dưỡng - Khác"],"rest":["Bún","Burger","Gà rán","Cháo","Trà - Khác","Bánh cuốn/ Bánh ướt","Bánh canh","Phở","Hải sản","Xiên que/ Viên chiên","Bánh bao","Cơm chiên","Bún/Phở/ Mì - Khác","Gà, Vịt","Heo, Bò","Bún đậu","Mì","Hủ tiếu","Bánh đa","Miến","a9a. Nui","Trà Sữa","Cơm - Không, trắng, cháy","Xôi","Cơm nắm","Cà phê","Bánh mì","Bánh truyền thống - Khác","Bánh bèo/nậm/lọc","Bánh hỏi","Nem, chả, thịt nguội","Món Trung","Soup","Rau câu & flan","Nước ép","Sinh tố","Bánh Âu Á - Khác","Bánh kem","Bánh su","Donut","Bánh trứng","Rau, Củ, Quả","Sữa","Đồ ăn dinh dưỡng - Khác"]},"10h-13h":{"center":["Bánh mì","Cơm - Không, trắng, cháy","Nem, chả, thịt nguội","Bún","Hủ tiếu","Cà phê","Rau, Củ, Quả","Món Hàn","Nước ép","Đồ uống không cồn khác - Khác","Xôi","unk","Món Trung","Bánh kem","Bánh Âu Á - Khác","Miến","Mì","Bún đậu","Phở","Bánh canh","Bún/Phở/ Mì - Khác","Bánh đa","a9a. Nui","Trà Sữa","Trà - Khác","Cơm thố/ Cơm niêu","Cơm chiên","Cơm nắm","Cơm - Khác","Gà rán","Burger","Pizza","Hotdog","Bánh cuốn/ Bánh ướt","Bánh truyền thống - Khác","Bánh xèo/ Bánh khọt","Bánh bèo/nậm/lọc","Bánh hỏi","Gà, Vịt","Hải sản","Trứng","Món Âu","Món Nhật","Món Thái","Ẩm thực quốc tế - Khác","Cháo","Soup","Gỏi","Nướng","Nước uống đóng chai","Nấm","Sữa","Salad"],"rest":["Gà rán","Mì","Burger","Trà Sữa","Trà - Khác","Bún đậu","Cơm chiên","Cơm thố/ Cơm niêu","Pizza","Xiên que/ Viên chiên","Gà, Vịt","Lẩu","Bánh cuốn/ Bánh ướt","Cháo","Món Nhật","Cơm trộn","Bún","Phở","Bánh canh","Hủ tiếu","Bún/Phở/ Mì - Khác","Bánh đa","Miến","a9a. Nui","Cơm - Không, trắng, cháy","Xôi","Cơm nắm","Cơm đặc sản","Hotdog","Bánh mì","Bánh truyền thống - Khác","Bánh xèo/ Bánh khọt","Bánh bao","Bánh bèo/nậm/lọc","Bánh hỏi","Hải sản","Heo, Bò","Nem, chả, thịt nguội","Trứng","Món Hàn","Món Âu","Món Thái","Soup","Gỏi","Nước ép","Nướng","Rau, Củ, Quả","Nấm","Rau gia vị","Sữa","Salad","Đồ ăn dinh dưỡng - Khác","Poke","Thức uống lên men"]},"13h-16h":{"center":["Bánh mì","Cà phê","Bánh tráng","Nem, chả, thịt nguội","Bún","Đồ uống không cồn khác - Khác","Xôi","Đậu hũ/Tào phớ","Hủ tiếu","Bánh truyền thống - Khác","Sinh tố","Món Hàn","Nước ép","Bánh kem","unk","Trà Sữa","Trà - Khác","Trà trái cây","Cơm thố/ Cơm niêu","Cơm chiên","Cơm - Khác","Các món cuốn","Xiên que/ Viên chiên","Đồ ăn vặt - Khác","Nem chua","Khoai các loại","Bột chiên","Cơm cháy","f9a. Gỏi ăn vặt","Bánh cuốn/ Bánh ướt","Bánh xèo/ Bánh khọt","Bánh bèo/nậm/lọc","Bánh gà","Bánh hỏi","Bánh giò","Gà, Vịt","Hải sản","Ẩm thực quốc tế - Khác","Cháo","Chè","Trái cây","Sữa chua","Kem","Rau câu & flan","Bánh Âu Á - Khác","Bánh bông lan","Bánh su","Donut","Waffle","Bánh trứng","Cupcake","Nước uống đóng chai","Sữa","Salad"],"rest":["Gà rán","Trà Sữa","Mì","Trà - Khác","Burger","Bún đậu","Cơm chiên","Xiên que/ Viên chiên","Gà, Vịt","Pizza","Lẩu","Cơm thố/ Cơm niêu","Bánh xèo/ Bánh khọt","Cháo","Heo, Bò","Cơm trộn","Trà trái cây","Cơm - Không, trắng, cháy","Xôi","Cơm nắm","Cà phê","Bánh tráng","Các món cuốn","Đồ ăn vặt - Khác","Nem chua","Khoai các loại","Bột chiên","Cơm cháy","f9a. Gỏi ăn vặt","Bánh mì","Bánh cuốn/ Bánh ướt","Bánh truyền thống - Khác","Bánh bao","Bánh bèo/nậm/lọc","Bánh hỏi","Hải sản","Trứng","Món Hàn","Món Thái","Chè","Trái cây","Sữa chua","Đậu hũ/Tào phớ","Kem","Rau câu & flan","Tráng miệng - Khác","Nước ép","Sinh tố","Bánh Âu Á - Khác","Bánh kem","Bánh bông lan","Bánh su","Donut","Waffle","Bánh trứng","Đồ uống không cồn khác - Khác","Sữa","Đồ ăn dinh dưỡng - Khác","Thức uống lên men"]},"16h-20h":{"center":["Bánh mì","Cơm - Không, trắng, cháy","Hủ tiếu","Món Hàn","Nem, chả, thịt nguội","Bánh tráng","Bún","Xôi","Đồ uống không cồn khác - Khác","Đậu hũ/Tào phớ","Sinh tố","Hải sản","Món Âu","Bánh kem","Trà trái cây","Mì","Bún đậu","Bánh canh","Bún/Phở/ Mì - Khác","Miến","Trà Sữa","Cơm thố/ Cơm niêu","Cơm chiên","Cơm - Khác","Cơm đặc sản","Gà rán","Burger","Pizza","Hotdog","Các món cuốn","Xiên que/ Viên chiên","Đồ ăn vặt - Khác","Nem chua","Khoai các loại","Bột chiên","Các loại trứng","Cơm cháy","f9a. Gỏi ăn vặt","Bánh cuốn/ Bánh ướt","Bánh truyền thống - Khác","Bánh xèo/ Bánh khọt","Bánh bao","Bánh bèo/nậm/lọc","Gà, Vịt","Heo, Bò","Trứng","Thịt đặc sản","Món Nhật","Món Trung","Món Thái","Ẩm thực quốc tế - Khác","Cháo","Soup","Gỏi","Chè","Trái cây","Sữa chua","Kem","Rau câu & flan","Nước ép","Bánh Âu Á - Khác","Bánh bông lan","Bánh su","Donut","Cupcake","Nướng","Lẩu","Rau, Củ, Quả","Nấm","Đồ ăn dinh dưỡng - Khác","Poke"],"rest":["Gà rán","Mì","Burger","Bún đậu","Trà Sữa","Trà - Khác","Pizza","Lẩu","Món Nhật","Cơm chiên","Bánh xèo/ Bánh khọt","Xiên que/ Viên chiên","Bánh canh","Gà, Vịt","Heo, Bò","Cơm thố/ Cơm niêu","Bún","Hủ tiếu","Bún/Phở/ Mì - Khác","Miến","a9a. Nui","Cơm - Không, trắng, cháy","Xôi","Cơm đặc sản","Bánh tráng","Các món cuốn","Đồ ăn vặt - Khác","Nem chua","Khoai các loại","Bột chiên","Các loại trứng","Cơm cháy","f9a. Gỏi ăn vặt","Bánh mì","Bánh cuốn/ Bánh ướt","Bánh truyền thống - Khác","Bánh bao","Bánh bèo/nậm/lọc","Hải sản","Nem, chả, thịt nguội","Thịt đặc sản","Món Hàn","Món Âu","Món Trung","Món Thái","Ẩm thực quốc tế - Khác","Cháo","Soup","Gỏi","Chè","Trái cây","Sữa chua","Đậu hũ/Tào phớ","Kem","Rau câu & flan","Tráng miệng - Khác","Nước ép","Bánh Âu Á - Khác","Bánh kem","Bánh bông lan","Bánh su","Donut","Waffle","Bánh trứng","Nướng","Nước uống đóng chai","Rau, Củ, Quả","Nấm","Sữa","Thức uống lên men"]},"20h-24h":{"center":["Cơm - Không, trắng, cháy","Bánh mì","Hủ tiếu","Đồ uống không cồn khác - Khác","Hải sản","Đậu hũ/Tào phớ","Bánh kem","Sinh tố","Bánh tráng","Bánh bông lan","Trà trái cây","Đồ ăn vặt - Khác","Cơm chiên","Nem, chả, thịt nguội","Món Âu","Bún","Mì","Bún đậu","Phở","Bánh canh","Bún/Phở/ Mì - Khác","Miến","a9a. Nui","Trà Sữa","Trà - Khác","Cơm thố/ Cơm niêu","Xôi","Cơm - Khác","Cơm đặc sản","Gà rán","Burger","Pizza","Hotdog","Các món cuốn","Xiên que/ Viên chiên","Nem chua","Khoai các loại","Các loại trứng","Cơm cháy","f9a. Gỏi ăn vặt","Bánh cuốn/ Bánh ướt","Bánh truyền thống - Khác","Bánh xèo/ Bánh khọt","Bánh bao","Gà, Vịt","Heo, Bò","Trứng","Thịt đặc sản","Món Hàn","Món Nhật","Món Trung","Món Thái","Cháo","Soup","Gỏi","Chè","Trái cây","Sữa chua","Kem","Tráng miệng - Khác","Nước ép","Bánh Âu Á - Khác","Donut","Cupcake","Nướng","Lẩu","Nước uống đóng chai","Sữa","Đồ ăn dinh dưỡng - Khác"],"rest":["Gà rán","Trà Sữa","Mì","Bún đậu","Trà - Khác","Xiên que/ Viên chiên","Gà, Vịt","Lẩu","Chè","Bột chiên","Bánh xèo/ Bánh khọt","Món Trung","Pizza","Cơm cháy","Sữa chua","Gỏi","Bún","Phở","Bánh canh","Hủ tiếu","Bún/Phở/ Mì - Khác","a9a. Nui","Trà trái cây","Cơm - Không, trắng, cháy","Cơm thố/ Cơm niêu","Cơm chiên","Xôi","Cơm đặc sản","Burger","Bánh tráng","Đồ ăn vặt - Khác","Nem chua","Các loại trứng","f9a. Gỏi ăn vặt","Bánh mì","Bánh cuốn/ Bánh ướt","Bánh truyền thống - Khác","Hải sản","Heo, Bò","Trứng","Thịt đặc sản","Món Hàn","Món Âu","Món Nhật","Món Thái","Cháo","Soup","Trái cây","Đậu hũ/Tào phớ","Kem","Rau câu & flan","Tráng miệng - Khác","Nước ép","Sinh tố","Bánh Âu Á - Khác","Bánh kem","Bánh bông lan","Donut","Waffle","Bánh trứng","Nướng","Đồ uống không cồn khác - Khác","Nước uống đóng chai","Sữa"]}}}};
+const cache={1:{},2:{},3:{},4:{},5:{}};
+const ss={1:{col:'pct75',asc:false},2:{col:'pct75',asc:false},3:{col:'pct75',asc:false},
+          4:{col:'pct75',asc:false},5:{col:'pct75',asc:false}};
+const filt={1:[],2:[],3:[],4:[],5:[]};
+
+// per-pkg filter state
+const FS = {};
+[1,2,3,4,5].forEach(p=>{
+  FS[p]={city:'',l1:'',dist:'',q:'',pricePcts:new Set(),adoPcts:new Set(),hourRange:new Set()};
+});
+
+// ── init ───────────────────────────────────────────────────────────────────
+async function init(){
+  buildDayTabs();
+  try{
+    const [stats,sum,l1,kw,htc]=await Promise.all([
+      api('/api/stats'),api('/api/summary'),api('/api/l1list'),api('/api/keywords'),api('/api/htc')
+    ]);
+    document.getElementById('hdrStats').innerHTML=
+      `<div class="stat"><strong>${stats.total_recommendations.toLocaleString()}</strong> total SKUs</div>
+       <div class="stat"><strong>${stats.cities.length}</strong> cities</div>
+       <div class="stat"><strong>${stats.days.length}</strong> days</div>`;
+    SUMMARY=sum; L1LIST=l1; KW=kw; HTC_RAW=htc;
+    renderSummary();
+  }catch(e){
+    document.getElementById('sumPanels').innerHTML=`<div class="nodata">⚠ Cannot connect to http://127.0.0.1:5050 — is app.py running?</div>`;
+  }
+}
+async function api(url){const r=await fetch(url);if(!r.ok)throw new Error(r.status);return r.json();}
+
+// ── day tabs ───────────────────────────────────────────────────────────────
+function buildDayTabs(){
+  const w=document.getElementById('dayTabs');
+  DAYS.forEach(d=>{
+    const b=el('button');b.textContent=FULL[d];
+    b.className=(WKND.has(d)?'wknd ':'')+(d===activeDay?'active':'');
+    b.onclick=()=>{activeDay=d;syncTabs();onDay();};
+    w.appendChild(b);
+  });
+}
+function syncTabs(){
+  document.querySelectorAll('#dayTabs button').forEach((b,i)=>{
+    const d=DAYS[i];b.className=(WKND.has(d)?'wknd ':'')+(d===activeDay?'active':'');
+  });
+}
+function onDay(){
+  if(activeView==='sum')renderSummary();
+  else{const p=+activeView.replace('pkg','');loadAndRender(p);}
+}
+
+// ── view switch ────────────────────────────────────────────────────────────
+function sv(name,el2){
+  activeView=name;
+  document.querySelectorAll('.vtab').forEach(t=>t.classList.remove('active'));
+  el2.classList.add('active');
+  ['sum','pkg1','pkg2','pkg3','pkg4','pkg5'].forEach(v=>{
+    const e=document.getElementById('v'+v.charAt(0).toUpperCase()+v.slice(1));
+    if(e)e.style.display=v===name?'block':'none';
+  });
+  if(name.startsWith('pkg')){const p=+name.replace('pkg','');loadAndRender(p);}
+  if(name==='sum')renderSummary();
+}
+
+// ── load + render ──────────────────────────────────────────────────────────
+async function loadAndRender(pkg){
+  if(![1,2,3,4,5].includes(pkg)) return;
+  if(!cache[pkg][activeDay]){
+    const tblEl=document.getElementById(`tbl${pkg}`);
+    if(tblEl) tblEl.innerHTML='<div class="loading">Loading…</div>';
+    try{
+      const rows=await api(`/api/package/${pkg}/${activeDay}`);
+      cache[pkg][activeDay]=rows;
+    }catch(e){
+      const tblEl=document.getElementById(`tbl${pkg}`);
+      if(tblEl) tblEl.innerHTML=`<div class="nodata">⚠ Could not load package ${pkg}. Check app.py is running.</div>`;
+      return;
+    }
+  }
+  buildFilterBar(pkg, cache[pkg][activeDay]);
+  ap(pkg);
+  if(pkg>=4) renderHTC(pkg);
+}
+
+// ── FILTER BAR ────────────────────────────────────────────────────────────
+function buildFilterBar(pkg,allRows){
+  const bar=document.getElementById(`fbar${pkg}`);
+  bar.innerHTML='';
+
+  const dists=[...new Set(allRows.map(r=>r.district).filter(Boolean))].sort();
+  const hasDistrict=dists.length>0;
+  const hasHour=true; // hour filter available on all packages
+
+  // Row 1: city / district / L1 / search
+  const row1=el('div','frow');
+
+  // city select
+  const lc=el('label');lc.innerHTML='<span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:var(--mu);display:block;margin-bottom:3px">City</span>';
+  const sc=el('select','finput');sc.innerHTML='<option value="">All cities</option><option>Hai Phong</option><option>Binh Duong</option>';
+  sc.value=FS[pkg].city;sc.onchange=()=>{FS[pkg].city=sc.value;ap(pkg);};
+  lc.appendChild(sc);row1.appendChild(lc);
+
+  // district select (pkg3+)
+  if(hasDistrict){
+    const ld=el('label');ld.innerHTML='<span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:var(--mu);display:block;margin-bottom:3px">District</span>';
+    const sd=el('select','finput');sd.innerHTML='<option value="">All</option>';
+    dists.forEach(d=>{const o=el('option');o.value=o.textContent=d;sd.appendChild(o);});
+    sd.value=FS[pkg].dist;sd.onchange=()=>{FS[pkg].dist=sd.value;ap(pkg);};
+    ld.appendChild(sd);row1.appendChild(ld);
+  }
+
+  // L1 select
+  const ll=el('label');ll.innerHTML='<span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:var(--mu);display:block;margin-bottom:3px">L1 Category</span>';
+  const sl=el('select','finput');sl.innerHTML='<option value="">All</option>';
+  L1LIST.forEach(c=>{const o=el('option');o.value=o.textContent=c;sl.appendChild(o);});
+  sl.value=FS[pkg].l1;sl.onchange=()=>{FS[pkg].l1=sl.value;ap(pkg);};
+  ll.appendChild(sl);row1.appendChild(ll);
+
+  // search
+  const ls=el('label');ls.innerHTML='<span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:var(--mu);display:block;margin-bottom:3px">Search SKU / Merchant</span>';
+  const inp=el('input','finput');inp.type='text';inp.placeholder='type to filter…';
+  inp.value=FS[pkg].q;inp.oninput=()=>{FS[pkg].q=inp.value;ap(pkg);};
+  ls.appendChild(inp);row1.appendChild(ls);
+
+  // count + actions
+  const acts=el('div','factions');
+  const cnt=el('span','fcount');cnt.id=`cnt${pkg}`;acts.appendChild(cnt);
+  if(pkg>=3){const kwb=el('button','btn kw');kwb.innerHTML='🔑 Keywords';kwb.onclick=()=>openKw(pkg);acts.appendChild(kwb);}
+  const expb=el('button','btn');expb.innerHTML='↓ Excel';expb.onclick=()=>xport(pkg);acts.appendChild(expb);
+  const rst=el('button','btn rst');rst.innerHTML='↺ Reset';rst.onclick=()=>resetFilters(pkg);acts.appendChild(rst);
+  row1.appendChild(acts);
+  bar.appendChild(row1);
+
+  // Row 2: ADO tier pills
+  const row2=el('div','frow');
+  const al=el('span','flabel');al.textContent='ADO tier';row2.appendChild(al);
+  const adoMap=[{lbl:'pct25',label:'p75 ≥ 1.5'},{lbl:'pct50',label:'p75 ≥ 2.0'},
+                {lbl:'pct75',label:'p75 ≥ 3.0'},{lbl:'pct90',label:'p75 ≥ 4.0'},{lbl:'pct95',label:'p75 ≥ 5.0'}];
+  const ap2=el('div','pills');
+  adoMap.forEach(({lbl,label})=>{
+    const p=el('span','pill');p.textContent=label;p.dataset.lbl=lbl;
+    if(FS[pkg].adoPcts.has(lbl))p.classList.add('on','ado-on');
+    p.onclick=()=>{
+      if(FS[pkg].adoPcts.has(lbl)){FS[pkg].adoPcts.delete(lbl);p.classList.remove('on','ado-on');}
+      else{FS[pkg].adoPcts.add(lbl);p.classList.add('on','ado-on');}
+      ap(pkg);
+    };
+    ap2.appendChild(p);
+  });
+  const adoLeg=el('span');adoLeg.style.cssText='font-size:10px;color:var(--mu);align-self:center;margin-left:6px';
+  adoLeg.textContent='Min pct75 ADO threshold · multi-select = lowest selected applies';
+  row2.appendChild(ap2);row2.appendChild(adoLeg);bar.appendChild(row2);
+
+  // Row 3: Price match pills
+  const row3=el('div','frow');
+  const pl=el('span','flabel');pl.textContent='Price ±15%';row3.appendChild(pl);
+  const pp=el('div','pills');
+  PCT_LBLS.forEach(lbl=>{
+    const p=el('span','pill');p.textContent=lbl;p.dataset.lbl=lbl;
+    if(FS[pkg].pricePcts.has(lbl))p.classList.add('on','price-on');
+    p.onclick=()=>{
+      if(FS[pkg].pricePcts.has(lbl)){FS[pkg].pricePcts.delete(lbl);p.classList.remove('on','price-on');}
+      else{FS[pkg].pricePcts.add(lbl);p.classList.add('on','price-on');}
+      ap(pkg);
+    };
+    pp.appendChild(p);
+  });
+  // legend
+  const leg=el('span');leg.style.cssText='font-size:10px;color:var(--mu);align-self:center;margin-left:6px';
+  leg.textContent='Items where dish_price ±15% = benchmark price at selected tier';
+  row3.appendChild(pp);row3.appendChild(leg);bar.appendChild(row3);
+
+  // Row 4: Hour range pills — exact slots from HTC sheet (weekday vs weekend)
+  {
+    // Weekday = Mon-Fri, Weekend = Sat-Sun
+    const isWeekend=(activeDay==='Sat'||activeDay==='Sun');
+    const WD_SLOTS=['5h-9h','9h-10h','10h-12h','12h-13h','13h-16h','16h-17h','17h-20h','20h-22h','22h-5h'];
+    const WE_SLOTS=['0h-6h','6h-10h','10h-13h','13h-16h','16h-20h','20h-24h'];
+    const slots=isWeekend?WE_SLOTS:WD_SLOTS;
+    const row4=el('div','frow');
+    const hl=el('span','flabel');
+    hl.textContent=`Hour (${isWeekend?'Weekend':'Weekday'})`;
+    row4.appendChild(hl);
+    const hp2=el('div','pills');
+    slots.forEach(slot=>{
+      const p=el('span','pill');p.textContent=slot;p.dataset.slot=slot;
+      if(FS[pkg].hourRange.has(slot))p.classList.add('on');
+      p.onclick=()=>{
+        if(FS[pkg].hourRange.has(slot)){FS[pkg].hourRange.delete(slot);p.classList.remove('on');}
+        else{FS[pkg].hourRange.add(slot);p.classList.add('on');}
+        if(pkg>=4) renderHTC(pkg);
+        ap(pkg);
+      };
+      hp2.appendChild(p);
+    });
+    const hleg=el('span');hleg.style.cssText='font-size:10px;color:var(--mu);align-self:center;margin-left:6px';
+    hleg.textContent='From HTC sheet · multi-select = union · filters SKU list by L2 categories recommended for that hour';
+    row4.appendChild(hp2);row4.appendChild(hleg);bar.appendChild(row4);
+  }
+
+  bar.classList.add('visible');
+}
+
+function resetFilters(pkg){
+  FS[pkg]={city:'',l1:'',dist:'',q:'',pricePcts:new Set(),adoPcts:new Set(),hourRange:new Set()};
+  buildFilterBar(pkg, cache[pkg][activeDay]||[]);
+  ap(pkg);
+}
+
+// ── apply filters ──────────────────────────────────────────────────────────
+function ap(pkg){
+  const rows=cache[pkg][activeDay]||[];
+  const f=FS[pkg];
+  let r=rows.slice();
+
+  // standard dropdown / text filters
+  if(f.city) r=r.filter(x=>x.city===f.city);
+  if(f.l1)   r=r.filter(x=>x.l1_category===f.l1);
+  if(f.dist) r=r.filter(x=>x.district===f.dist);
+  if(f.q){
+    const q=f.q.toLowerCase();
+    r=r.filter(x=>x.sku.toLowerCase().includes(q)||x.merchant.toLowerCase().includes(q));
+  }
+
+  // ADO filter: each pill = a minimum pct75 threshold
+  // Multi-select = AND (strictest selected threshold applies, narrows the list)
+  const adoThresh={pct25:1.5, pct50:2.0, pct75:3.0, pct90:4.0, pct95:5.0};
+  if(f.adoPcts.size>0){
+    const maxThresh=Math.max(...[...f.adoPcts].map(lbl=>adoThresh[lbl]||0));
+    r=r.filter(x=>(x.pct75||0)>=maxThresh);
+  }
+
+  // Price match filter: keep items where price_pct_match includes ANY selected pct
+  if(f.pricePcts.size>0){
+    r=r.filter(x=>{
+      const pm=Array.isArray(x.price_pct_match)?x.price_pct_match:[];
+      return [...f.pricePcts].some(lbl=>pm.includes(lbl));
+    });
+  }
+
+  // Hour-range filter — reads directly from embedded HTC_MAP constant
+  if(f.hourRange.size>0){
+    const isWeekend = (activeDay==='Sat'||activeDay==='Sun');
+    const dayType   = isWeekend ? 'weekend' : 'weekday';
+    const bench     = f.city==='Hai Phong' ? ['HN'] : f.city==='Binh Duong' ? ['HCM'] : ['HN','HCM'];
+    const zones     = pkg===4 ? ['center'] : pkg===5 ? ['rest'] : ['center','rest'];
+    const allowedL2 = new Set();
+    bench.forEach(b=>{
+      const dayMap = (HTC_MAP[b] && HTC_MAP[b][dayType]) ? HTC_MAP[b][dayType] : {};
+      [...f.hourRange].forEach(slot=>{
+        const slotMap = dayMap[slot] || {};
+        zones.forEach(z=>{
+          const cats = slotMap[z] || [];
+          cats.forEach(l2=>allowedL2.add(l2.trim().toLowerCase()));
+        });
+      });
+    });
+    console.log('[Hour filter]', dayType, [...f.hourRange], 'allowed L2s:', allowedL2.size, [...allowedL2].slice(0,5));
+    if(allowedL2.size>0){
+      r = r.filter(x=>allowedL2.has((x.l2_category||'').trim().toLowerCase()));
+    }
+  }
+
+  const {col,asc}=ss[pkg];
+  r.sort((a,b)=>{
+    let va=a[col]??'', vb=b[col]??'';
+    if(typeof va==='string'){va=va.toLowerCase();vb=vb.toLowerCase();}
+    return asc?(va>vb?1:-1):(va<vb?1:-1);
+  });
+  filt[pkg]=r;
+  const c=document.getElementById(`cnt${pkg}`);
+  if(c)c.textContent=`${r.length.toLocaleString()} rows`;
+  renderTable(pkg,r);
+}
+
+// ── column definitions ─────────────────────────────────────────────────────
+function cols(pkg){
+  const base=[
+    {k:'city',h:'City',s:true},
+    {k:'merchant_id',h:'Merchant ID',s:true},
+    {k:'merchant',h:'Merchant',s:true,w:'140px'},
+    {k:'dish_id',h:'Item ID',s:true},
+    {k:'sku',h:'SKU',s:true,w:'170px'},
+    {k:'l1_category',h:'L1',s:true},
+    {k:'l2_category',h:'L2',s:true},
+    {k:'pct25',h:'p25 ADO',s:true,cls:'pnum'},
+    {k:'pct50',h:'p50 ADO',s:true,cls:'pnum'},
+    {k:'pct75',h:'p75 ADO ★',s:true,cls:'pnum'},
+    {k:'pct90',h:'p90 ADO',s:true,cls:'pnum'},
+    {k:'pct95',h:'p95 ADO',s:true,cls:'pnum'},
+    {k:'dish_price',h:'My Price',s:true,cls:'pnum'},
+    {k:'price_pct_match',h:'Match ±15%',s:false,_pm:true},
+    {k:'price_pct50',h:'p50 Bench',s:true,cls:'prnum'},
+    {k:'price_pct75',h:'p75 Bench',s:true,cls:'prnum'},
+    {k:'price_pct90',h:'p90 Bench',s:true,cls:'prnum'},
+    {k:'reason',h:'Reason',s:false,cls:'rsn',w:'160px'},
+  ];
+  if(pkg>=3){
+    base.splice(2,0,{k:'district',h:'District',s:true});
+    base.push({k:'top_keywords',h:'Keywords',s:false,cls:'kwcell',w:'160px'});
+  }
+  if(pkg>=4) base.splice(3,0,{k:'district_type',h:'Zone',s:true,_dtype:true});
+  return base;
+}
+
+function renderTable(pkg,rows){
+  const wrap=document.getElementById(`tbl${pkg}`);
+  const cs=cols(pkg);
+  const s=ss[pkg];
+  const tbl=el('table','dtbl');
+  const hr=el('tr');
+  cs.forEach(c=>{
+    const th=el('th');th.textContent=c.h;
+    if(c.w)th.style.minWidth=c.w;
+    if(c.s){
+      if(c.k===s.col)th.className=s.asc?'sa':'sd';
+      th.onclick=()=>{s.col===c.k?(s.asc=!s.asc):(s.col=c.k,s.asc=false);ap(pkg);};
+    }
+    hr.appendChild(th);
+  });
+  const thead=el('thead');thead.appendChild(hr);tbl.appendChild(thead);
+  const tb=el('tbody');
+  const slice=rows.slice(0,500);
+  if(!slice.length){
+    const tr=el('tr');tr.innerHTML=`<td colspan="${cs.length}" class="nodata">No results. Try clearing some filters.</td>`;tb.appendChild(tr);
+  }else{
+    slice.forEach(r=>{
+      const tr=el('tr');
+      tr.innerHTML=cs.map(c=>{
+        if(c.k==='city'){
+          const cls=r.city==='Hai Phong'?'hp':'bd',lbl=r.city==='Hai Phong'?'HP':'BD';
+          return`<td><span class="cbadge ${cls}">${lbl}</span></td>`;
+        }
+        if(c._dtype){
+          const t=r[c.k]||'',cls=t==='Center'?'C':'R';
+          return`<td><span class="dtype ${cls}">${t}</span></td>`;
+        }
+        if(c._pm){
+          const pm=r.price_pct_match||[];
+          if(!pm.length)return`<td><span style="color:var(--fa);font-size:11px">—</span></td>`;
+          const tags=pm.map(p=>`<span class="pmtag">${p}</span>`).join('');
+          return`<td><div class="pmatch">${tags}</div></td>`;
+        }
+        const v=r[c.k]??'';
+        const st=c.w?`style="max-width:${c.w};white-space:nowrap;overflow:hidden;text-overflow:ellipsis"`:' ';
+        if(c.k==='dish_price'||c.k.startsWith('price_pct')){
+          const n=Number(v);return`<td class="${c.cls||''}">${n?n.toLocaleString()+'₫':'—'}</td>`;
+        }
+        if((c.k==='merchant'||c.k==='sku')&&c.w)
+          return`<td ${st} title="${esc(v)}" class="${c.cls||''}">${esc(v)}</td>`;
+        return`<td class="${c.cls||''}" ${st}>${esc(String(v))}</td>`;
+      }).join('');
+      tb.appendChild(tr);
+    });
+    if(rows.length>500){
+      const tr=el('tr');
+      tr.innerHTML=`<td colspan="${cs.length}" class="tip">Showing 500 of ${rows.length.toLocaleString()} — use filters to narrow.</td>`;
+      tb.appendChild(tr);
+    }
+  }
+  tbl.appendChild(tb);wrap.innerHTML='';wrap.appendChild(tbl);
+}
+
+// ── HTC table ──────────────────────────────────────────────────────────────
+function renderHTC(pkg){
+  const wrap=document.getElementById(`htc${pkg}`);
+  if(!wrap) return;  // HTC panel only exists for pkg4/5
+  if(!HTC_RAW||!HTC_RAW.length){
+    wrap.innerHTML='<div class="nodata">⚠ HTC data not available — upload Flashsale_data_library_final.xlsx with "Cat L2 + HTC Propose" tab, then re-run prepare_data.py.</div>';
+    return;
+  }
+  const hrs=FS[pkg].hourRange;
+  const headers=Object.keys(HTC_RAW[0]);
+  const hourCol=headers.find(h=>/hour|slot|giờ|h\d/i.test(h))||headers[0];
+  let rows=HTC_RAW;
+  if(hrs.size>0&&hourCol){
+    rows=rows.filter(r=>{
+      const rv=String(r[hourCol]||'').trim();
+      return [...hrs].some(h=>{
+        const hh=String(h).replace(':00','').replace(/^0/,'');
+        const rh=rv.replace(':00','').replace(/^0/,'');
+        return h===rv || hh===rh;
+      });
+    });
+  }
+
+  const tbl=el('table');
+  const hrow=el('tr');headers.forEach(h=>{const th=el('th');th.textContent=h;hrow.appendChild(th);});
+  const thead=el('thead');thead.appendChild(hrow);tbl.appendChild(thead);
+  const tbody=el('tbody');
+  rows.forEach(row=>{
+    const tr=el('tr');
+    headers.forEach(h=>{const td=el('td');td.textContent=row[h]??'';tr.appendChild(td);});
+    tbody.appendChild(tr);
+  });
+  tbl.appendChild(tbody);wrap.innerHTML='';wrap.appendChild(tbl);
+}
+
+// ── export Excel ─────────────────────────────────────────────────────────
+function xport(pkg){
+  const rows=filt[pkg];if(!rows||!rows.length)return;
+  const cs=cols(pkg);
+  const keys=['city','benchmark',...cs.map(c=>c.k).filter(k=>k!=='city')];
+  const hdrs=['City','Benchmark',...cs.map(c=>c.h)];
+  const wsData=[hdrs];
+  rows.forEach(r=>{
+    wsData.push(keys.map(k=>{
+      let v=r[k]??'';
+      if(Array.isArray(v))v=v.join('; ');
+      return String(v);
+    }));
+  });
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.aoa_to_sheet(wsData);
+  ws['!cols']=hdrs.map((h,i)=>({wch:Math.min(Math.max(h.length,...wsData.slice(1).map(r=>String(r[i]||'').length))+2,50)}));
+  ws['!freeze']={xSplit:0,ySplit:1,topLeftCell:'A2',activePane:'bottomLeft'};
+  XLSX.utils.book_append_sheet(wb,ws,`Pkg${pkg}_${activeDay}`);
+  XLSX.writeFile(wb,`pkg${pkg}_${activeDay}.xlsx`);
+}
+// ── keywords panel ─────────────────────────────────────────────────────────
+function openKw(pkg){
+  if(!KW)return;
+  const f=FS[pkg];
+  const bench=f.city==='Hai Phong'?'HN':f.city==='Binh Duong'?'HCM':null;
+  const cat=f.l1||'';
+  const body=document.getElementById('kwBody');body.innerHTML='';
+  const benches=bench?[bench]:['HN','HCM'];
+  // only show keywords for L2 categories visible in current filtered table
+  const visibleL2s=new Set((filt[pkg]||[]).map(x=>x.l2_category).filter(Boolean));
+
+  benches.forEach(b=>{
+    const bData=KW[b]||{};
+    const hdr=el('div');hdr.style.cssText='font-size:12px;font-weight:650;margin-bottom:10px';
+    hdr.textContent=`${b}${cat?' — '+cat:''}`;body.appendChild(hdr);
+
+    // intersect kw L2s with what is currently visible in the filtered table
+    const l2s=Object.keys(bData).filter(l2=>visibleL2s.size===0||visibleL2s.has(l2)).sort();
+    if(!l2s.length){
+      const p=el('p');p.style.cssText='font-size:11px;color:var(--mu)';
+      p.textContent='No keywords match current filters.';body.appendChild(p);return;
+    }
+    l2s.forEach(l2=>{
+      const kws=bData[l2];if(!kws||!kws.length)return;
+      const sec=el('div','kwsec');
+      const h4=el('h4');
+      const cnt=(filt[pkg]||[]).filter(x=>x.l2_category===l2).length;
+      h4.innerHTML=`${esc(l2)} <span style="color:var(--mu);font-weight:400">(${cnt} SKUs)</span>`;
+      sec.appendChild(h4);
+      kws.forEach(kw=>{
+        const row=el('div','kwrow');
+        row.innerHTML=`<span class="kwword">${esc(kw.keyword)}</span>
+          <div class="kwscores">ADO avg <strong>${kw.ado_mean}</strong><br>p50 <strong>${Number(kw.price_pct50).toLocaleString()}₫</strong> p75 <strong>${Number(kw.price_pct75).toLocaleString()}₫</strong></div>`;
+        sec.appendChild(row);
+      });
+      body.appendChild(sec);
+    });
+  });
+  document.getElementById('kwPanel').classList.add('open');
+}
+function closeKw(){document.getElementById('kwPanel').classList.remove('open');}
+
+// ── summary ────────────────────────────────────────────────────────────────
+function renderSummary(){
+  const wrap=document.getElementById('sumPanels');
+  if(!SUMMARY){return;}
+  wrap.innerHTML='';
+  wrap.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:18px';
+  [{city:'Hai Phong',cls:'pHp',bench:'HN'},{city:'Binh Duong',cls:'pBd',bench:'HCM'}]
+  .forEach(({city,cls,bench})=>{
+    const d=SUMMARY[city]?.[activeDay];
+    if(!d){
+      const e=el('div',`panel ${cls}`);e.innerHTML=`<div class="nodata">No data for ${city}</div>`;wrap.appendChild(e);return;
+    }
+    const total=d.total_skus||0,maxI=(d.categories||[])[0]?.items||1;
+    const panel=el('div',`panel ${cls}`);
+    const phdr=el('div','phdr');
+    phdr.innerHTML=`
+      <div class="ptitle">${city}<span class="btag">${bench}</span></div>
+      <div class="krow">
+        <div class="kpi"><div class="klbl">Pkg 1 broad</div><div class="kval">${(d.pkg1_count||0).toLocaleString()}</div></div>
+        <div class="kpi"><div class="klbl">Pkg 2 price</div><div class="kval">${(d.pkg2_count||0).toLocaleString()}</div></div>
+        <div class="kpi"><div class="klbl">Pkg 3 strict</div><div class="kval">${(d.pkg3_count||0).toLocaleString()}</div></div>
+        <div class="kpi"><div class="klbl">Pkg 4 center</div><div class="kval">${(d.pkg4_count||0).toLocaleString()}</div></div>
+        <div class="kpi"><div class="klbl">Pkg 5 rest</div><div class="kval">${(d.pkg5_count||0).toLocaleString()}</div></div>
+        <div class="kpi"><div class="klbl">Merchants</div><div class="kval">${(d.total_merchants||0).toLocaleString()}</div></div>
+      </div>`;
+    panel.appendChild(phdr);
+    if(d.categories&&d.categories.length){
+      const tbl=el('table','ctbl');
+      tbl.innerHTML=`<thead><tr><th style="width:22px">#</th><th>Category (L1)</th><th>SKUs</th><th>Merchants</th><th style="min-width:100px">Share</th></tr></thead>`;
+      const tb=el('tbody');
+      d.categories.forEach((c,i)=>{
+        const pct=total>0?((c.items/total)*100).toFixed(1):'0.0';
+        const barW=Math.round((c.items/maxI)*100),rc=i<3?`r${i+1}`:'';
+        const tr=el('tr');
+        tr.innerHTML=`<td style="color:var(--fa);font-size:11px">${i+1}</td>
+          <td><span class="rdot ${rc}"></span><span class="cname" title="${esc(c.l1_category)}">${esc(c.l1_category)}</span></td>
+          <td><strong>${c.items}</strong></td><td style="color:var(--mu)">${c.merchants}</td>
+          <td><div class="bcell"><span style="font-size:10px;color:var(--mu);min-width:28px;text-align:right">${pct}%</span>
+            <div class="btrack"><div class="bfill" style="width:${barW}%"></div></div></div></td>`;
+        tb.appendChild(tr);
+      });
+      tbl.appendChild(tb);panel.appendChild(tbl);
+    }
+    const pf=el('div','pfoot');
+    pf.innerHTML=`<span>${bench} benchmark · ${FULL[activeDay]}</span><span>pkg3 &lt; pkg2 &lt; pkg1 ✓</span>`;
+    panel.appendChild(pf);wrap.appendChild(panel);
+  });
+}
+
+function el(tag,cls){const e=document.createElement(tag);if(cls)e.className=cls;return e;}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+init();
+</script>
+</body>
+</html>
