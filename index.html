@@ -168,6 +168,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;
 .tip{padding:8px;text-align:center;font-size:11px;color:var(--mu);border-top:1px solid var(--bdr2)}
 .loading{padding:36px;text-align:center;color:var(--mu)}
 
+/* filter impact summary bar */
+.sumbar{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);
+  padding:8px 14px;margin-bottom:8px;box-shadow:var(--sh);
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:11px}
+.sumbar.hidden{display:none}
+.sb-total{color:var(--mu);white-space:nowrap}
+.sb-total strong{color:var(--tx);font-weight:650}
+.sb-arr{color:var(--fa);font-size:12px}
+.sb-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;
+  border-radius:20px;background:#f3f4f6;border:1px solid var(--bdr);
+  font-size:10px;font-weight:500;color:#374151;white-space:nowrap}
+.sb-chip .sb-delta{color:#dc2626;font-weight:650}
+.sb-chip .sb-delta.ok{color:var(--mu)}
+.sb-shown{font-weight:650;color:var(--tx);white-space:nowrap;margin-left:2px}
+
 /* HTC */
 .htcwrap{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);
   overflow:auto;box-shadow:var(--sh);max-height:360px;margin-top:14px}
@@ -306,6 +321,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;
         <div class="tags"><span class="tag g">pct50 ADO ≥ 1.5</span><span class="tag g">No price filter</span><span class="tag b">Most items</span></div>
       </div>
       <div id="fbar1" class="fbar"></div>
+      <div id="sumbar1" class="sumbar hidden"></div>
       <div class="twrap"><div id="tbl1" class="loading">Loading…</div></div>
     </div>
 
@@ -322,6 +338,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;
         <div class="tags"><span class="tag g">pct50 ADO ≥ 1.5</span><span class="tag r">dish_price ±15% vs benchmark</span><span class="tag g">Subset of Pkg 1</span></div>
       </div>
       <div id="fbar2" class="fbar"></div>
+      <div id="sumbar2" class="sumbar hidden"></div>
       <div class="twrap"><div id="tbl2" class="loading">Loading…</div></div>
     </div>
 
@@ -338,6 +355,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;
         <div class="tags"><span class="tag r">pct75 ADO ≥ 4.0</span><span class="tag v">+ district</span><span class="tag v">+ keywords</span><span class="tag r">Fewest items</span></div>
       </div>
       <div id="fbar3" class="fbar"></div>
+      <div id="sumbar3" class="sumbar hidden"></div>
       <div class="twrap"><div id="tbl3" class="loading">Loading…</div></div>
     </div>
 
@@ -354,6 +372,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;
         <div class="tags"><span class="tag r">pct75 ADO ≥ 4.0</span><span class="tag v">Center only</span><span class="tag b">Hourly L2 recs</span></div>
       </div>
       <div id="fbar4" class="fbar"></div>
+      <div id="sumbar4" class="sumbar hidden"></div>
       <div class="twrap"><div id="tbl4" class="loading">Loading…</div></div>
       <div class="htc-label">📅 Hourly L2 Category Recommendations (Center)</div>
       <div class="htcwrap" id="htc4"><div class="loading">Loading HTC data…</div></div>
@@ -370,6 +389,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;
         <div class="tags"><span class="tag r">pct75 ADO ≥ 4.0</span><span class="tag b">Non-center</span><span class="tag b">Hourly L2 recs</span></div>
       </div>
       <div id="fbar5" class="fbar"></div>
+      <div id="sumbar5" class="sumbar hidden"></div>
       <div class="twrap"><div id="tbl5" class="loading">Loading…</div></div>
       <div class="htc-label">📅 Hourly L2 Category Recommendations (Rest)</div>
       <div class="htcwrap" id="htc5"><div class="loading">Loading HTC data…</div></div>
@@ -685,6 +705,70 @@ function ap(pkg){
   const c=document.getElementById(`cnt${pkg}`);
   if(c)c.textContent=`${r.length.toLocaleString()} rows`;
   renderTable(pkg,r);
+  renderSumBar(pkg, rows, f);
+}
+
+function renderSumBar(pkg, allRows, f){
+  const bar=document.getElementById(`sumbar${pkg}`);
+  if(!bar) return;
+  const total=allRows.length;
+  const shown=filt[pkg].length;
+  const impacts=[];
+
+  // compute step-by-step impact
+  let cur=allRows.slice();
+  function step(label, filterFn){
+    const before=cur.length;
+    cur=cur.filter(filterFn);
+    const delta=cur.length-before;
+    if(delta<0) impacts.push({label, delta});
+  }
+
+  if(f.city)       step(`City: ${f.city}`,         x=>x.city===f.city);
+  if(f.l1)         step(`L1: ${f.l1}`,             x=>x.l1_category===f.l1);
+  if(f.dist)       step(`District: ${f.dist}`,      x=>x.district===f.dist);
+  if(f.q)          step(`Search: "${f.q}"`,         x=>{const q=f.q.toLowerCase();return x.sku.toLowerCase().includes(q)||x.merchant.toLowerCase().includes(q);});
+  if(f.adoPcts.size>0){
+    const adoThresh={pct25:1.5,pct50:2.0,pct75:3.0,pct90:4.0,pct95:5.0};
+    const maxThresh=Math.max(...[...f.adoPcts].map(lbl=>adoThresh[lbl]||0));
+    step(`ADO ≥ ${maxThresh}`, x=>(x.pct75||0)>=maxThresh);
+  }
+  if(f.pricePcts.size>0){
+    const lbls=[...f.pricePcts].join(', ');
+    step(`Price match: ${lbls}`, x=>{const pm=Array.isArray(x.price_pct_match)?x.price_pct_match:[];return [...f.pricePcts].some(lbl=>pm.includes(lbl));});
+  }
+  if(f.hourRange.size>0){
+    const slots=[...f.hourRange].join(', ');
+    step(`Hour: ${slots}`, x=>{
+      const isWeekend=(activeDay==='Sat'||activeDay==='Sun');
+      const dayType=isWeekend?'weekend':'weekday';
+      const bench=f.city==='Hai Phong'?['HN']:f.city==='Binh Duong'?['HCM']:['HN','HCM'];
+      const zones=pkg===4?['center']:pkg===5?['rest']:['center','rest'];
+      const allowed=new Set();
+      bench.forEach(b=>{
+        const dm=(HTC_MAP[b]&&HTC_MAP[b][dayType])||{};
+        [...f.hourRange].forEach(sl=>{const sm=dm[sl]||{};zones.forEach(z=>(sm[z]||[]).forEach(l2=>allowed.add(l2.trim().toLowerCase())));});
+      });
+      return allowed.size===0||allowed.has((x.l2_category||'').trim().toLowerCase());
+    });
+  }
+
+  bar.classList.remove('hidden');
+
+  // city breakdown of unfiltered rows
+  const cityGroups={};
+  allRows.forEach(x=>{cityGroups[x.city]=(cityGroups[x.city]||0)+1;});
+  const cityParts=Object.entries(cityGroups).map(([c,n])=>`${c}: <strong>${n.toLocaleString()}</strong>`).join(' &nbsp;·&nbsp; ');
+
+  let html=`<span class="sb-total">${cityParts} &nbsp;·&nbsp; <strong>${total.toLocaleString()}</strong> total</span>`;
+
+  if(impacts.length>0){
+    impacts.forEach(({label,delta})=>{
+      html+=`<span class="sb-arr">›</span><span class="sb-chip">${label} <span class="sb-delta">${delta.toLocaleString()}</span></span>`;
+    });
+    html+=`<span class="sb-arr">›</span><span class="sb-shown">${shown.toLocaleString()} shown</span>`;
+  }
+  bar.innerHTML=html;
 }
 
 // ── column definitions ─────────────────────────────────────────────────────
