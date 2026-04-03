@@ -52,6 +52,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;
 .vtab[data-v="pkg4"].active{border-bottom-color:var(--p4c);color:var(--p4c)}
 .vtab[data-v="pkg5"].active{border-bottom-color:var(--p5c);color:var(--p5c)}
 .vtab[data-v="fl"].active{border-bottom-color:var(--p3c);color:var(--p3c)}
+.vtab[data-v="pfm"].active{border-bottom-color:#0369a1;color:#0369a1}
 
 /* body */
 #body{flex:1;overflow-y:auto;padding:20px 28px;display:flex;flex-direction:column;gap:20px}
@@ -165,8 +166,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;
 .pmtag{padding:1px 5px;border-radius:3px;background:#dcfce7;color:#166534;font-weight:600}
 .rsn{font-size:11px;color:var(--mu);line-height:1.4;max-width:170px}
 .kwcell{font-size:11px;color:var(--p4c);max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-/* Filtered List extras */
+.nodata{padding:36px;text-align:center;color:var(--mu);font-size:13px}
+.tip{padding:8px;text-align:center;font-size:11px;color:var(--mu);border-top:1px solid var(--bdr2)}
+.loading{padding:36px;text-align:center;color:var(--mu)}
 .pmok{color:#166534;font-weight:700;font-size:12px}
+.pfm-tbl{width:100%;border-collapse:collapse}
+.pfm-tbl th{padding:7px 12px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:var(--fa);text-align:left;border-bottom:2px solid var(--bdr2)}
+.pfm-tbl th:not(:first-child):not(:nth-child(2)){text-align:right}
+.pfm-tbl td{padding:6px 12px;font-size:12px;border-bottom:1px solid var(--bdr2);vertical-align:middle}
+.pfm-tbl td:not(:first-child):not(:nth-child(2)){text-align:right}
+.pfm-tbl .l1-row td{background:#f8f8f6;font-weight:600;font-size:12px}
+.pfm-tbl .l2-row td{padding-left:28px;font-size:11px;color:#333}
+.pfm-tbl .l1-row:hover td,.pfm-tbl .l2-row:hover td{background:var(--row)}
+.pfm-tbl tbody tr:last-child td{border-bottom:none}
+.pct-cell{font-variant-numeric:tabular-nums}
+.pct-good{color:#16a34a;font-weight:600}
+.pct-mid{color:#d97706;font-weight:600}
+.pct-bad{color:#dc2626;font-weight:600}
+.city-hdr{font-size:13px;font-weight:650;padding:12px 0 8px;display:flex;align-items:center;gap:8px}
+.nosale-bar{display:inline-block;height:5px;border-radius:2px;vertical-align:middle;margin-left:6px}
 .pmno{color:var(--fa);font-size:12px}
 .slotbadge{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;background:#f0f0ec;color:var(--mu);white-space:nowrap}
 .tier-strip{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
@@ -175,39 +193,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;
 .tier-card .tc-count{font-size:22px;font-weight:750;color:var(--p2c);letter-spacing:-.5px}
 .tier-card .tc-pct{font-size:10px;color:var(--mu)}
 .tier-card.best{border-color:var(--p2c);background:#f0fdf4}
-.fl-ctrl{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);
-  padding:10px 14px;margin-bottom:8px;box-shadow:var(--sh);
-  display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.fl-ctrl label{display:flex;flex-direction:column;gap:3px;font-size:10px;font-weight:600;
-  text-transform:uppercase;letter-spacing:.4px;color:var(--mu)}
-.fl-ctrl select,.fl-ctrl input[type=text]{border:1px solid var(--bdr);border-radius:6px;
-  padding:4px 8px;font-size:12px;font-family:inherit;background:var(--surf);color:var(--tx);outline:none}
-.fl-ctrl select:focus,.fl-ctrl input:focus{border-color:#aaa}
-.fl-cnt{font-size:11px;color:var(--mu);margin-left:auto;white-space:nowrap}
-.day-tab{padding:5px 12px;border-radius:6px;border:1px solid var(--bdr);background:transparent;
-  color:#666;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .12s}
-.day-tab:hover{background:var(--bdr2)}
-.day-tab.active{background:#111;color:#fff}
-.day-tab.wknd.active{background:var(--hp);border-color:var(--hp)}
-
-.nodata{padding:36px;text-align:center;color:var(--mu);font-size:13px}
-.tip{padding:8px;text-align:center;font-size:11px;color:var(--mu);border-top:1px solid var(--bdr2)}
-.loading{padding:36px;text-align:center;color:var(--mu)}
-
-/* filter impact summary bar */
-.sumbar{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);
-  padding:8px 14px;margin-bottom:8px;box-shadow:var(--sh);
-  display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:11px}
-.sumbar.hidden{display:none}
-.sb-total{color:var(--mu);white-space:nowrap}
-.sb-total strong{color:var(--tx);font-weight:650}
-.sb-arr{color:var(--fa);font-size:12px}
-.sb-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;
-  border-radius:20px;background:#f3f4f6;border:1px solid var(--bdr);
-  font-size:10px;font-weight:500;color:#374151;white-space:nowrap}
-.sb-chip .sb-delta{color:#dc2626;font-weight:650}
-.sb-chip .sb-delta.ok{color:var(--mu)}
-.sb-shown{font-weight:650;color:var(--tx);white-space:nowrap;margin-left:2px}
 
 /* HTC */
 .htcwrap{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);
@@ -243,64 +228,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;
 .kwscores strong{color:var(--tx)}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
-<style>
-.login-overlay{position:fixed;inset:0;background:linear-gradient(135deg,#0f0f1a 0%,#1a1a3e 100%);z-index:10000;display:flex;align-items:center;justify-content:center;font-family:-apple-system,sans-serif}
-.login-card{background:#fff;border-radius:16px;padding:36px 32px 28px;width:100%;max-width:360px;box-shadow:0 24px 60px rgba(0,0,0,.4)}
-.login-logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:24px}
-.login-logo-icon{width:40px;height:40px;background:#111;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
-.login-title{font-size:18px;font-weight:700;color:#111;text-align:center;margin-bottom:4px}
-.login-sub{font-size:11px;color:#888;text-align:center;margin-bottom:22px;font-family:monospace}
-.login-field{margin-bottom:11px}
-.login-lbl{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888;margin-bottom:4px;display:block;font-family:monospace}
-.login-inp{width:100%;background:#f5f5fa;border:1.5px solid #ddd;border-radius:8px;padding:10px 12px;font-family:monospace;font-size:12px;color:#111;outline:none}
-.login-inp:focus{border-color:#111}
-.login-err{font-family:monospace;font-size:10px;color:#dc2626;margin-bottom:10px;display:none;text-align:center}
-.login-err.show{display:block}
-.login-btn{width:100%;background:#111;border:none;color:#fff;font-family:monospace;font-size:12px;padding:12px;border-radius:9px;cursor:pointer;margin-top:4px}
-.login-btn:active{opacity:.85}
-.login-forgot{display:block;text-align:center;margin-top:12px;font-family:monospace;font-size:10px;color:#888;cursor:pointer}
-.login-forgot:hover{color:#111}
-</style>
 </head>
 <body>
-<div class="login-overlay" id="loginOverlay">
-  <div class="login-card">
-    <div class="login-logo"><div class="login-logo-icon">⚡</div></div>
-    <div class="login-title">Flash Sale · SKU Rcmd</div>
-    <div class="login-sub">// SF Operations Dashboard</div>
-    <div class="login-err" id="loginErr">Incorrect username or password</div>
-    <div class="login-field">
-      <label class="login-lbl">Username</label>
-      <input class="login-inp" type="text" id="loginUser" autocomplete="username">
-    </div>
-    <div class="login-field">
-      <label class="login-lbl">Password</label>
-      <input class="login-inp" type="password" id="loginPass" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
-    </div>
-    <button class="login-btn" onclick="doLogin()">Sign in</button>
-    <a class="login-forgot" onclick="location.href='mailto:n.hoaianh93@gmail.com?subject=Dashboard Access'">Forgot password?</a>
-  </div>
-</div>
-<script>
-(function(){
-  var _cu=[67,68,74,66,74,69,67,5,69,76,94,82,78,69];
-  var _cp=[102,64,107,26,25,24,31,30,29];
-  function _dk(a,k){return a.map(function(c){return String.fromCharCode(c^k);}).join('');}
-  var _u=_dk(_cu,43),_p=_dk(_cp,43);
-  function checkSession(){if(sessionStorage.getItem('auth')==='1')hideLogin();}
-  window.doLogin=function(){
-    var u=document.getElementById('loginUser').value.trim();
-    var p=document.getElementById('loginPass').value;
-    if(u===_u&&p===_p){sessionStorage.setItem('auth','1');hideLogin();}
-    else{var e=document.getElementById('loginErr');e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2000);}
-  };
-  function hideLogin(){var ov=document.getElementById('loginOverlay');if(ov){ov.style.opacity='0';ov.style.transition='opacity .3s';setTimeout(()=>ov.style.display='none',300);}}
-  window.addEventListener('DOMContentLoaded',checkSession);
-})();
-</script>
-
-
 <div id="app">
 
   <div id="hdr">
@@ -326,6 +255,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;
     <div class="vtab"        data-v="pkg4" onclick="sv('pkg4',this)">Package 4 — Center</div>
     <div class="vtab"        data-v="pkg5" onclick="sv('pkg5',this)">Package 5 — Rest</div>
     <div class="vtab"        data-v="fl"   onclick="sv('fl',this)">Filtered List</div>
+    <div class="vtab"        data-v="pfm"  onclick="sv('pfm',this)">Category Performance</div>
   </div>
 
   <div id="body">
@@ -348,7 +278,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;
         <div class="tags"><span class="tag g">pct50 ADO ≥ 1.5</span><span class="tag g">No price filter</span><span class="tag b">Most items</span></div>
       </div>
       <div id="fbar1" class="fbar"></div>
-      <div id="sumbar1" class="sumbar hidden"></div>
       <div class="twrap"><div id="tbl1" class="loading">Loading…</div></div>
     </div>
 
@@ -365,7 +294,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;
         <div class="tags"><span class="tag g">pct50 ADO ≥ 1.5</span><span class="tag r">dish_price ±15% vs benchmark</span><span class="tag g">Subset of Pkg 1</span></div>
       </div>
       <div id="fbar2" class="fbar"></div>
-      <div id="sumbar2" class="sumbar hidden"></div>
       <div class="twrap"><div id="tbl2" class="loading">Loading…</div></div>
     </div>
 
@@ -382,7 +310,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;
         <div class="tags"><span class="tag r">pct75 ADO ≥ 4.0</span><span class="tag v">+ district</span><span class="tag v">+ keywords</span><span class="tag r">Fewest items</span></div>
       </div>
       <div id="fbar3" class="fbar"></div>
-      <div id="sumbar3" class="sumbar hidden"></div>
       <div class="twrap"><div id="tbl3" class="loading">Loading…</div></div>
     </div>
 
@@ -399,7 +326,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;
         <div class="tags"><span class="tag r">pct75 ADO ≥ 4.0</span><span class="tag v">Center only</span><span class="tag b">Hourly L2 recs</span></div>
       </div>
       <div id="fbar4" class="fbar"></div>
-      <div id="sumbar4" class="sumbar hidden"></div>
       <div class="twrap"><div id="tbl4" class="loading">Loading…</div></div>
       <div class="htc-label">📅 Hourly L2 Category Recommendations (Center)</div>
       <div class="htcwrap" id="htc4"><div class="loading">Loading HTC data…</div></div>
@@ -416,7 +342,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;
         <div class="tags"><span class="tag r">pct75 ADO ≥ 4.0</span><span class="tag b">Non-center</span><span class="tag b">Hourly L2 recs</span></div>
       </div>
       <div id="fbar5" class="fbar"></div>
-      <div id="sumbar5" class="sumbar hidden"></div>
       <div class="twrap"><div id="tbl5" class="loading">Loading…</div></div>
       <div class="htc-label">📅 Hourly L2 Category Recommendations (Rest)</div>
       <div class="htcwrap" id="htc5"><div class="loading">Loading HTC data…</div></div>
@@ -428,25 +353,54 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;
         <h3><span class="pbadge" style="background:#fee2e2;color:var(--p3c)">Filtered List</span>&nbsp; 1 best SKU per merchant per hour slot</h3>
         <ul>
           <li><strong>Base:</strong> Package 3 logic (pct75 ADO ≥ 4.0) — items filtered to L2 categories recommended by the HTC sheet for each hour slot</li>
-          <li><strong>Selection rule:</strong> Per merchant × hour slot → the 1 SKU with highest pct75 ADO is picked (pct50 as tiebreak)</li>
-          <li><strong>5 price options:</strong> benchmark pct25/50/75/90/95 shown as suggested price tiers · ✓ = dish_price within ±15% of that tier</li>
-          <li>Weekday slots (Mon–Fri) · Weekend slots (Sat–Sun) — derived from HTC sheet</li>
+          <li><strong>Selection rule:</strong> Per merchant × hour slot → the 1 SKU with the highest pct75 ADO is picked (pct50 as tiebreak)</li>
+          <li><strong>5 price options:</strong> benchmark pct25 / pct50 / pct75 / pct90 / pct95 shown as suggested price tiers · ✓ = dish_price within ±15% of that tier</li>
+          <li>Weekday slots (Mon–Fri) · Weekend slots (Sat–Sun) — from HTC sheet</li>
         </ul>
       </div>
-      <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap" id="flDayTabs"></div>
-      <div id="flCtrl" class="fl-ctrl" style="display:none">
+      <div style="display:flex;gap:3px;margin-bottom:14px;flex-wrap:wrap" id="flDayTabs"></div>
+      <div id="flCtrl" class="ctrl" style="display:none">
         <label>City<select id="flCity" onchange="apFl()"><option value="">All</option><option>Hai Phong</option><option>Binh Duong</option></select></label>
         <label>Hour slot<select id="flSlot" onchange="apFl()"><option value="">All slots</option></select></label>
         <label>L1 Category<select id="flL1" onchange="apFl()"><option value="">All</option></select></label>
         <label>Search<input id="flQ" type="text" placeholder="merchant / SKU…" oninput="apFl()"></label>
-        <label style="flex-direction:row;align-items:center;gap:5px;font-size:11px;color:var(--mu);align-self:center">
-          <input type="checkbox" id="flMatchOnly" onchange="apFl()">Price match only
+        <label style="align-self:center;font-size:11px;color:var(--mu)">
+          <input type="checkbox" id="flMatchOnly" onchange="apFl()" style="margin-right:4px">Price match only
         </label>
-        <span class="fl-cnt" id="flCnt"></span>
+        <span class="cnt" id="flCnt"></span>
         <button class="btn" onclick="xportFl()">↓ Excel</button>
       </div>
       <div class="tier-strip" id="flTierStrip" style="display:none"></div>
       <div class="twrap"><div id="flTbl" class="loading">Select a day above</div></div>
+    </div>
+
+    <!-- CATEGORY PERFORMANCE -->
+    <div id="vPfm" style="display:none">
+      <div class="lcard" style="border-left:3px solid #0369a1;margin-bottom:14px">
+        <h3><span class="pbadge" style="background:#e0f2fe;color:#0369a1">Category Performance</span>&nbsp; City × L1 → L2 breakdown · 2 Apr 2026 Trial</h3>
+        <ul>
+          <li>Hai Phong: 904 items listed · 150 orders · 88.9% no-sale</li>
+          <li>Binh Duong: 2,007 items listed · 154 orders · 94.9% no-sale</li>
+          <li>Colour: <span style="color:#16a34a;font-weight:600">green</span> = low no-sale (good) · <span style="color:#d97706;font-weight:600">amber</span> = 85–94% · <span style="color:#dc2626;font-weight:600">red</span> = ≥95% no-sale</li>
+        </ul>
+      </div>
+
+      <!-- Controls row -->
+      <div style="display:flex;gap:16px;margin-bottom:16px;align-items:center;flex-wrap:wrap">
+        <div style="display:flex;gap:6px;align-items:center">
+          <span style="font-size:10px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.4px">View</span>
+          <button id="pfmViewCat" class="btn" style="background:#111;color:#fff;border-color:#111" onclick="setPfmView('cat')">By Category</button>
+          <button id="pfmViewHr"  class="btn" onclick="setPfmView('hour')">By Hour</button>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span style="font-size:10px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.4px">City</span>
+          <button id="pfmBtnAll" class="btn" style="background:#111;color:#fff;border-color:#111" onclick="setPfmCity('all')">All</button>
+          <button id="pfmBtnHP"  class="btn" onclick="setPfmCity('HP')">Hai Phong</button>
+          <button id="pfmBtnBD"  class="btn" onclick="setPfmCity('BD')">Binh Duong</button>
+        </div>
+      </div>
+
+      <div id="pfmContent"></div>
     </div>
 
   </div>
@@ -482,10 +436,9 @@ const FS = {};
 async function init(){
   buildDayTabs();
   try{
-    await loadData();
-    const [stats,sum,l1,kw,htc]=[
-      computeStats(),DATA.summary,computeL1List(),DATA.keywords||{},DATA.htc||[]
-    ];
+    const [stats,sum,l1,kw,htc]=await Promise.all([
+      api('/api/stats'),api('/api/summary'),api('/api/l1list'),api('/api/keywords'),api('/api/htc')
+    ]);
     document.getElementById('hdrStats').innerHTML=
       `<div class="stat"><strong>${stats.total_recommendations.toLocaleString()}</strong> total SKUs</div>
        <div class="stat"><strong>${stats.cities.length}</strong> cities</div>
@@ -493,28 +446,10 @@ async function init(){
     SUMMARY=sum; L1LIST=l1; KW=kw; HTC_RAW=htc;
     renderSummary();
   }catch(e){
-    document.getElementById('sumPanels').innerHTML=`<div class="nodata" style="line-height:2">
-  ⚠ <strong>data.json.gz not found.</strong><br>
-  Run: <code>python prepare_data.py</code> — then open index.html directly in browser.
-</div>`; 
+    document.getElementById('sumPanels').innerHTML=`<div class="nodata">⚠ Cannot connect to http://127.0.0.1:5050 — is app.py running?</div>`;
   }
 }
-let DATA=null;
-async function loadData(){
-  const r=await fetch('./data.json.gz');
-  if(!r.ok)throw new Error('data.json.gz not found — run prepare_data.py first');
-  const ds=new DecompressionStream('gzip');
-  DATA=await new Response(r.body.pipeThrough(ds)).json();
-}
-function computeStats(){
-  const recs=DATA.package1||[];
-  return{total_recommendations:recs.length,
-    cities:[...new Set(recs.map(r=>r.city))].sort(),
-    days:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]};
-}
-function computeL1List(){
-  return[...new Set((DATA.package1||[]).map(r=>r.l1_category))].filter(Boolean).sort();
-}
+async function api(url){const r=await fetch(url);if(!r.ok)throw new Error(r.status);return r.json();}
 
 // ── day tabs ───────────────────────────────────────────────────────────────
 function buildDayTabs(){
@@ -541,12 +476,13 @@ function sv(name,el2){
   activeView=name;
   document.querySelectorAll('.vtab').forEach(t=>t.classList.remove('active'));
   el2.classList.add('active');
-  const vmap={sum:'vSum',pkg1:'vPkg1',pkg2:'vPkg2',pkg3:'vPkg3',pkg4:'vPkg4',pkg5:'vPkg5',fl:'vFl'};
+  const vmap={sum:'vSum',pkg1:'vPkg1',pkg2:'vPkg2',pkg3:'vPkg3',pkg4:'vPkg4',pkg5:'vPkg5',fl:'vFl',pfm:'vPfm'};
   Object.values(vmap).forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='none';});
   const ae=document.getElementById(vmap[name]);if(ae)ae.style.display='block';
   if(name.startsWith('pkg')){const p=+name.replace('pkg','');loadAndRender(p);}
   if(name==='sum')renderSummary();
   if(name==='fl')initFl();
+  if(name==='pfm')initPfm();
 }
 
 // ── load + render ──────────────────────────────────────────────────────────
@@ -556,12 +492,11 @@ async function loadAndRender(pkg){
     const tblEl=document.getElementById(`tbl${pkg}`);
     if(tblEl) tblEl.innerHTML='<div class="loading">Loading…</div>';
     try{
-      const key='package'+pkg;
-      const rows=(DATA[key]||[]).filter(r=>r.day===activeDay);
+      const rows=await api(`/api/package/${pkg}/${activeDay}`);
       cache[pkg][activeDay]=rows;
     }catch(e){
       const tblEl=document.getElementById(`tbl${pkg}`);
-      if(tblEl) tblEl.innerHTML=`<div class="nodata">⚠ Could not load package ${pkg} from data.json.</div>`;
+      if(tblEl) tblEl.innerHTML=`<div class="nodata">⚠ Could not load package ${pkg}. Check app.py is running.</div>`;
       return;
     }
   }
@@ -759,70 +694,6 @@ function ap(pkg){
   const c=document.getElementById(`cnt${pkg}`);
   if(c)c.textContent=`${r.length.toLocaleString()} rows`;
   renderTable(pkg,r);
-  renderSumBar(pkg, rows, f);
-}
-
-function renderSumBar(pkg, allRows, f){
-  const bar=document.getElementById(`sumbar${pkg}`);
-  if(!bar) return;
-  const total=allRows.length;
-  const shown=filt[pkg].length;
-  const impacts=[];
-
-  // compute step-by-step impact
-  let cur=allRows.slice();
-  function step(label, filterFn){
-    const before=cur.length;
-    cur=cur.filter(filterFn);
-    const delta=cur.length-before;
-    if(delta<0) impacts.push({label, delta});
-  }
-
-  if(f.city)       step(`City: ${f.city}`,         x=>x.city===f.city);
-  if(f.l1)         step(`L1: ${f.l1}`,             x=>x.l1_category===f.l1);
-  if(f.dist)       step(`District: ${f.dist}`,      x=>x.district===f.dist);
-  if(f.q)          step(`Search: "${f.q}"`,         x=>{const q=f.q.toLowerCase();return x.sku.toLowerCase().includes(q)||x.merchant.toLowerCase().includes(q);});
-  if(f.adoPcts.size>0){
-    const adoThresh={pct25:1.5,pct50:2.0,pct75:3.0,pct90:4.0,pct95:5.0};
-    const maxThresh=Math.max(...[...f.adoPcts].map(lbl=>adoThresh[lbl]||0));
-    step(`ADO ≥ ${maxThresh}`, x=>(x.pct75||0)>=maxThresh);
-  }
-  if(f.pricePcts.size>0){
-    const lbls=[...f.pricePcts].join(', ');
-    step(`Price match: ${lbls}`, x=>{const pm=Array.isArray(x.price_pct_match)?x.price_pct_match:[];return [...f.pricePcts].some(lbl=>pm.includes(lbl));});
-  }
-  if(f.hourRange.size>0){
-    const slots=[...f.hourRange].join(', ');
-    step(`Hour: ${slots}`, x=>{
-      const isWeekend=(activeDay==='Sat'||activeDay==='Sun');
-      const dayType=isWeekend?'weekend':'weekday';
-      const bench=f.city==='Hai Phong'?['HN']:f.city==='Binh Duong'?['HCM']:['HN','HCM'];
-      const zones=pkg===4?['center']:pkg===5?['rest']:['center','rest'];
-      const allowed=new Set();
-      bench.forEach(b=>{
-        const dm=(HTC_MAP[b]&&HTC_MAP[b][dayType])||{};
-        [...f.hourRange].forEach(sl=>{const sm=dm[sl]||{};zones.forEach(z=>(sm[z]||[]).forEach(l2=>allowed.add(l2.trim().toLowerCase())));});
-      });
-      return allowed.size===0||allowed.has((x.l2_category||'').trim().toLowerCase());
-    });
-  }
-
-  bar.classList.remove('hidden');
-
-  // city breakdown of unfiltered rows
-  const cityGroups={};
-  allRows.forEach(x=>{cityGroups[x.city]=(cityGroups[x.city]||0)+1;});
-  const cityParts=Object.entries(cityGroups).map(([c,n])=>`${c}: <strong>${n.toLocaleString()}</strong>`).join(' &nbsp;·&nbsp; ');
-
-  let html=`<span class="sb-total">${cityParts} &nbsp;·&nbsp; <strong>${total.toLocaleString()}</strong> total</span>`;
-
-  if(impacts.length>0){
-    impacts.forEach(({label,delta})=>{
-      html+=`<span class="sb-arr">›</span><span class="sb-chip">${label} <span class="sb-delta">${delta.toLocaleString()}</span></span>`;
-    });
-    html+=`<span class="sb-arr">›</span><span class="sb-shown">${shown.toLocaleString()} shown</span>`;
-  }
-  bar.innerHTML=html;
 }
 
 // ── column definitions ─────────────────────────────────────────────────────
@@ -1063,26 +934,29 @@ function renderSummary(){
 function el(tag,cls){const e=document.createElement(tag);if(cls)e.className=cls;return e;}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-// ── Filtered List ──────────────────────────────────────────────────────────
-const DAYS_FL=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+// ── FILTERED LIST ─────────────────────────────────────────────────────────
+const DAYS_FULL=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const WD_SLOTS=['5h-9h','9h-10h','10h-12h','12h-13h','13h-16h','16h-17h','17h-20h','20h-22h','22h-5h'];
+const WE_SLOTS=['0h-6h','6h-10h','10h-13h','13h-16h','16h-20h','20h-24h'];
+
 let flDay='Mon', flData={}, flFiltered=[], flSortCol='pct75', flSortAsc=false;
 
 function initFl(){
+  // Build day sub-tabs (once)
   const dtabs=document.getElementById('flDayTabs');
   if(!dtabs.hasChildNodes()){
-    DAYS_FL.forEach(d=>{
-      const b=el('button','day-tab '+(WKND.has(d)?'wknd ':'')+(d===flDay?'active':''));
+    DAYS_FULL.forEach(d=>{
+      const b=el('button');
       b.textContent=FULL[d];
-      if(d===flDay){b.style.background=WKND.has(d)?'var(--hp)':'#111';b.style.color='#fff';}
+      b.className='day-tab '+(WKND.has(d)?'wknd ':'')+(d===flDay?'active':'');
+      b.style.cssText='padding:5px 12px;border-radius:6px;border:1px solid var(--bdr);background:transparent;color:#666;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit';
       b.onclick=()=>{
         flDay=d;
-        document.querySelectorAll('#flDayTabs .day-tab').forEach(x=>{
-          x.classList.remove('active');
-          x.style.background='transparent';x.style.color='#666';
-        });
+        document.querySelectorAll('#flDayTabs button').forEach(x=>x.classList.remove('active'));
         b.classList.add('active');
-        b.style.background=WKND.has(d)?'var(--hp)':'#111';
-        b.style.color='#fff';
+        if(b.classList.contains('wknd'))b.style.background=d===flDay?'var(--hp)':'';
+        else b.style.background=d===flDay?'#111':'';
+        b.style.color=d===flDay?'#fff':'#666';
         loadFl(d);
       };
       dtabs.appendChild(b);
@@ -1091,36 +965,37 @@ function initFl(){
   loadFl(flDay);
 }
 
-function loadFl(day){
-  document.getElementById('flTbl').innerHTML='<div class="loading">Loading…</div>';
-  if(!DATA){
-    document.getElementById('flTbl').innerHTML='<div class="nodata">⚠ Data not loaded yet.</div>';
-    return;
-  }
+async function loadFl(day){
   if(!flData[day]){
-    const rows=(DATA.filtered_list||[]).filter(r=>r.day===day);
-    flData[day]=rows;
-    // populate slot filter
-    const slots=[...new Set(rows.map(r=>r.slot))];
-    const sel=document.getElementById('flSlot');
-    sel.innerHTML='<option value="">All slots</option>';
-    slots.forEach(s=>{const o=el('option');o.value=o.textContent=s;sel.appendChild(o);});
-    // populate L1 filter
-    const l1s=[...new Set(rows.map(r=>r.l1_category))].filter(Boolean).sort();
-    const sl1=document.getElementById('flL1');
-    sl1.innerHTML='<option value="">All</option>';
-    l1s.forEach(c=>{const o=el('option');o.value=o.textContent=c;sl1.appendChild(o);});
-    document.getElementById('flCtrl').style.display='flex';
+    document.getElementById('flTbl').innerHTML='<div class="loading">Loading…</div>';
+    try{
+      const rows=await api('/api/filtered_list/'+day);
+      flData[day]=rows;
+      // populate slot filter
+      const slots=[...new Set(rows.map(r=>r.slot))];
+      const sel=document.getElementById('flSlot');
+      sel.innerHTML='<option value="">All slots</option>';
+      slots.forEach(s=>{const o=el('option');o.value=o.textContent=s;sel.appendChild(o);});
+      // populate L1 filter
+      const l1s=[...new Set(rows.map(r=>r.l1_category))].sort();
+      const sl1=document.getElementById('flL1');
+      sl1.innerHTML='<option value="">All</option>';
+      l1s.forEach(c=>{const o=el('option');o.value=o.textContent=c;sl1.appendChild(o);});
+      document.getElementById('flCtrl').style.display='flex';
+    }catch(e){
+      document.getElementById('flTbl').innerHTML='<div class="nodata">⚠ Could not load. Restart app.py.</div>';
+      return;
+    }
   }
   apFl();
 }
 
 function apFl(){
   const rows=flData[flDay]||[];
-  const city=(document.getElementById('flCity')||{}).value||'';
-  const slot=(document.getElementById('flSlot')||{}).value||'';
-  const l1  =(document.getElementById('flL1')||{}).value||'';
-  const q   =((document.getElementById('flQ')||{}).value||'').toLowerCase();
+  const city =(document.getElementById('flCity')||{}).value||'';
+  const slot =(document.getElementById('flSlot')||{}).value||'';
+  const l1   =(document.getElementById('flL1')||{}).value||'';
+  const q    =((document.getElementById('flQ')||{}).value||'').toLowerCase();
   const matchOnly=document.getElementById('flMatchOnly')?.checked||false;
 
   let r=rows.slice();
@@ -1142,26 +1017,28 @@ function apFl(){
 }
 
 const FL_COLS=[
-  {k:'slot',           h:'Hour Slot', s:true},
-  {k:'city',           h:'City',      s:true, _city:true},
-  {k:'merchant_id',    h:'Merch ID',  s:true},
-  {k:'merchant',       h:'Merchant',  s:true, w:'150px'},
-  {k:'dish_id',        h:'Item ID',   s:true},
-  {k:'sku',            h:'SKU',       s:true, w:'160px'},
-  {k:'l1_category',    h:'L1',        s:true},
-  {k:'l2_category',    h:'L2',        s:true},
-  {k:'dish_price',     h:'My Price',  s:true, _price:true},
-  {k:'pct75',          h:'p75 ADO ★', s:true, cls:'pnum'},
-  {k:'price_opt_pct25',h:'Opt p25',   s:true, _bprice:true},
-  {k:'price_opt_pct50',h:'Opt p50',   s:true, _bprice:true},
-  {k:'price_opt_pct75',h:'Opt p75',   s:true, _bprice:true},
-  {k:'price_opt_pct90',h:'Opt p90',   s:true, _bprice:true},
-  {k:'price_opt_pct95',h:'Opt p95',   s:true, _bprice:true},
-  {k:'match_pct25',    h:'±p25',      s:false, _match:'pct25'},
-  {k:'match_pct50',    h:'±p50',      s:false, _match:'pct50'},
-  {k:'match_pct75',    h:'±p75',      s:false, _match:'pct75'},
-  {k:'match_pct90',    h:'±p90',      s:false, _match:'pct90'},
-  {k:'match_pct95',    h:'±p95',      s:false, _match:'pct95'},
+  {k:'slot',        h:'Hour Slot', s:true},
+  {k:'city',        h:'City',      s:true,_city:true},
+  {k:'merchant_id', h:'Merch ID',  s:true},
+  {k:'merchant',    h:'Merchant',  s:true,w:'150px'},
+  {k:'dish_id',     h:'Item ID',   s:true},
+  {k:'sku',         h:'SKU',       s:true,w:'160px'},
+  {k:'l1_category', h:'L1',        s:true},
+  {k:'l2_category', h:'L2',        s:true},
+  {k:'dish_price',  h:'My Price',  s:true,_price:true},
+  {k:'pct75',       h:'p75 ADO ★', s:true,cls:'pnum'},
+  // 5 benchmark price options
+  {k:'price_opt_pct25',h:'Opt p25',s:true,_bprice:true},
+  {k:'price_opt_pct50',h:'Opt p50',s:true,_bprice:true},
+  {k:'price_opt_pct75',h:'Opt p75',s:true,_bprice:true},
+  {k:'price_opt_pct90',h:'Opt p90',s:true,_bprice:true},
+  {k:'price_opt_pct95',h:'Opt p95',s:true,_bprice:true},
+  // Price match flags
+  {k:'match_pct25', h:'±p25',s:false,_match:'pct25'},
+  {k:'match_pct50', h:'±p50',s:false,_match:'pct50'},
+  {k:'match_pct75', h:'±p75',s:false,_match:'pct75'},
+  {k:'match_pct90', h:'±p90',s:false,_match:'pct90'},
+  {k:'match_pct95', h:'±p95',s:false,_match:'pct95'},
 ];
 
 function renderFlTable(rows){
@@ -1190,10 +1067,13 @@ function renderFlTable(rows){
           const cls=r.city==='Hai Phong'?'hp':'bd',lbl=r.city==='Hai Phong'?'HP':'BD';
           return`<td><span class="cbadge ${cls}">${lbl}</span></td>`;
         }
-        if(c.k==='slot')return`<td><span class="slotbadge">${esc(r.slot||'')}</span></td>`;
+        if(c.k==='slot') return`<td><span class="slotbadge">${esc(r.slot||'')}</span></td>`;
         if(c._price){const n=Number(r[c.k]);return`<td class="pnum">${n?n.toLocaleString()+'₫':'—'}</td>`;}
         if(c._bprice){const n=Number(r[c.k]);return`<td class="prnum">${n?n.toLocaleString()+'₫':'—'}</td>`;}
-        if(c._match)return`<td style="text-align:center"><span class="${r[c.k]?'pmok':'pmno'}">${r[c.k]?'✓':'·'}</span></td>`;
+        if(c._match){
+          const ok=r[c.k];
+          return`<td style="text-align:center"><span class="${ok?'pmok':'pmno'}">${ok?'✓':'·'}</span></td>`;
+        }
         const v=r[c.k]??'';
         const st=c.w?`style="max-width:${c.w};white-space:nowrap;overflow:hidden;text-overflow:ellipsis"`:'';
         if(c.k==='merchant'||c.k==='sku')return`<td ${st} title="${esc(v)}" class="${c.cls||''}">${esc(v)}</td>`;
@@ -1216,6 +1096,7 @@ function renderTierStrip(rows){
   const total=rows.length;
   if(!total){strip.style.display='none';return;}
   strip.style.display='flex';
+
   const tiers=[
     {key:'match_pct25',opt:'price_opt_pct25',label:'p25 tier'},
     {key:'match_pct50',opt:'price_opt_pct50',label:'p50 tier'},
@@ -1223,27 +1104,138 @@ function renderTierStrip(rows){
     {key:'match_pct90',opt:'price_opt_pct90',label:'p90 tier'},
     {key:'match_pct95',opt:'price_opt_pct95',label:'p95 tier'},
   ];
+
+  // count per tier and find the best (most matches)
   const counts=tiers.map(t=>rows.filter(r=>r[t.key]).length);
   const maxCount=Math.max(...counts);
+
+  // also count "any match" and "no match"
   const anyMatch=rows.filter(r=>(r.price_pct_match||[]).length>0).length;
   const noMatch=total-anyMatch;
+
   strip.innerHTML='';
+
+  // Overall card
   const ov=el('div','tier-card');
   ov.innerHTML=`<div class="tc-label">Total SKUs</div><div class="tc-count" style="color:var(--tx)">${total.toLocaleString()}</div><div class="tc-pct">${anyMatch} with any price match</div>`;
   strip.appendChild(ov);
+
+  // Per tier
   tiers.forEach((t,i)=>{
     const n=counts[i];
     const pct=total>0?((n/total)*100).toFixed(0):'0';
     const isBest=n===maxCount&&n>0;
     const card=el('div',`tier-card${isBest?' best':''}`);
+    // sample price from first matching row
     const sample=rows.find(r=>r[t.key]);
     const price=sample?Number(sample[t.opt]).toLocaleString()+'₫':'—';
     card.innerHTML=`<div class="tc-label">${t.label}${isBest?' ★':''}</div><div class="tc-count">${n.toLocaleString()}</div><div class="tc-pct">${pct}% of list · ~${price}</div>`;
     strip.appendChild(card);
   });
+
+  // No match card
   const nm=el('div','tier-card');
   nm.innerHTML=`<div class="tc-label" style="color:var(--fa)">No price match</div><div class="tc-count" style="color:var(--fa)">${noMatch.toLocaleString()}</div><div class="tc-pct">${total>0?((noMatch/total)*100).toFixed(0):0}% of list</div>`;
   strip.appendChild(nm);
+}
+
+
+function renderPfmByHour(container){
+  const SLOTS=HOUR_CAT.slot_order;
+  const cities=pfmCity==='all'?['Hai Phong','Binh Duong']:
+                pfmCity==='HP'?['Hai Phong']:['Binh Duong'];
+
+  cities.forEach(city=>{
+    // City section wrapper
+    const cityDiv=el('div');
+    cityDiv.style.cssText='margin-bottom:24px';
+
+    // City badge header
+    const cityHdrDiv=el('div');
+    cityHdrDiv.style.cssText='margin-bottom:12px;display:flex;align-items:center;gap:10px';
+    const badge=city==='Hai Phong'?
+      '<span class="cbadge hp" style="font-size:12px;padding:3px 10px">Hai Phong → HN</span>':
+      '<span class="cbadge bd" style="font-size:12px;padding:3px 10px">Binh Duong → HCM</span>';
+    cityHdrDiv.innerHTML=badge;
+    cityDiv.appendChild(cityHdrDiv);
+
+    // One card per active slot
+    SLOTS.forEach(slot=>{
+      const slotHC=HOUR_CAT.hour_city.find(r=>r.City===city&&r['Hour Slot']===slot);
+      const slotL1=HOUR_CAT.hour_l1.filter(r=>r.City===city&&r['Hour Slot']===slot);
+      const slotL2=HOUR_CAT.hour_l2.filter(r=>r.City===city&&r['Hour Slot']===slot);
+      if(!slotHC) return;
+
+      const card=el('div');
+      card.style.cssText='background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);margin-bottom:14px;overflow:hidden;box-shadow:var(--sh)';
+
+      // Slot header
+      const slotHdr=el('div');
+      slotHdr.style.cssText='padding:10px 16px;border-bottom:1px solid var(--bdr2);display:flex;align-items:center;gap:14px;background:var(--bg)';
+      const noSaleColor=slotHC.pct_no_sale>=100?'#9ca3af':slotHC.pct_no_sale>=95?'#dc2626':slotHC.pct_no_sale>=85?'#d97706':'#16a34a';
+      slotHdr.innerHTML=
+        `<span class="slotbadge" style="font-size:11px">${slot}</span>`+
+        `<span style="font-size:12px"><strong>${slotHC.items}</strong> listed</span>`+
+        `<span style="font-size:12px"><strong style="color:var(--p2c)">${slotHC.orders}</strong> orders</span>`+
+        `<span style="font-size:12px;font-weight:600;color:${noSaleColor}">${slotHC.pct_no_sale}% no-sale</span>`+
+        `<span style="font-size:12px;color:var(--mu)">avg ADO <strong>${slotHC.avg_ado.toFixed(3)}</strong></span>`;
+      card.appendChild(slotHdr);
+
+      if(slotHC.orders===0){
+        const empty=el('div');
+        empty.style.cssText='padding:10px 16px;font-size:11px;color:var(--fa);font-style:italic';
+        empty.textContent='No orders in this slot';
+        card.appendChild(empty);
+        cityDiv.appendChild(card);
+        return;
+      }
+
+      // Table
+      const tbl=el('table','pfm-tbl');
+      tbl.innerHTML=`<thead><tr>
+        <th style="width:180px">L1</th><th>L2</th>
+        <th>Listed</th><th>Orders</th><th>% No Sale</th>
+        <th style="min-width:80px"></th><th>Avg ADO</th>
+      </tr></thead>`;
+      const tb=el('tbody');
+
+      slotL1.filter(r=>r.orders>0||r.items>0).sort((a,b)=>b.orders-a.orders).forEach(l1row=>{
+        const l2sub=slotL2.filter(r=>r.L1===l1row.L1);
+        const ns=l1row.pct_no_sale;
+        const barW=Math.round(ns*0.55);
+        const bc=ns>=95?'#dc2626':ns>=85?'#d97706':'#16a34a';
+
+        const tr1=el('tr','l1-row');
+        tr1.innerHTML=`<td>${esc(l1row.L1)}</td><td style="color:var(--mu);font-size:11px">${l2sub.length} sub-cat</td>
+          <td>${l1row.items}</td>
+          <td style="color:var(--p2c);font-weight:700">${l1row.orders}</td>
+          <td class="pct-cell ${nsClass(ns)}">${ns}%</td>
+          <td><span class="nosale-bar" style="width:${barW}px;background:${bc}"></span></td>
+          <td class="pnum">${l1row.avg_ado.toFixed(3)}</td>`;
+        tb.appendChild(tr1);
+
+        l2sub.sort((a,b)=>b.orders-a.orders).forEach(l2row=>{
+          const ns2=l2row.pct_no_sale;
+          const bw=Math.round(ns2*0.55);
+          const bc2=ns2>=95?'#dc2626':ns2>=85?'#d97706':'#16a34a';
+          const tr2=el('tr','l2-row');
+          tr2.innerHTML=`<td></td><td>${esc(l2row.L2)}</td>
+            <td style="color:var(--mu)">${l2row.items}</td>
+            <td style="font-weight:${l2row.orders>0?'600':'400'};color:${l2row.orders>0?'var(--p2c)':'var(--fa)'}">${l2row.orders||'—'}</td>
+            <td class="pct-cell ${nsClass(ns2)}">${ns2}%</td>
+            <td><span class="nosale-bar" style="width:${bw}px;background:${bc2}"></span></td>
+            <td class="pnum">${l2row.avg_ado.toFixed(3)}</td>`;
+          tb.appendChild(tr2);
+        });
+      });
+
+      tbl.appendChild(tb);
+      card.appendChild(tbl);
+      cityDiv.appendChild(card);
+    });
+
+    container.appendChild(cityDiv);
+  });
 }
 
 function xportFl(){
@@ -1256,7 +1248,13 @@ function xportFl(){
               'price_opt_pct25','price_opt_pct50','price_opt_pct75','price_opt_pct90','price_opt_pct95',
               'match_pct25','match_pct50','match_pct75','match_pct90','match_pct95'];
   const wsData=[hdrs];
-  rows.forEach(r=>{wsData.push(keys.map(k=>{const v=r[k];if(typeof v==='boolean')return v?'✓':'';return v===null||v===undefined?'':v;}));});
+  rows.forEach(r=>{
+    wsData.push(keys.map(k=>{
+      const v=r[k];
+      if(typeof v==='boolean')return v?'✓':'';
+      return v===null||v===undefined?'':v;
+    }));
+  });
   const wb=XLSX.utils.book_new();
   const ws=XLSX.utils.aoa_to_sheet(wsData);
   ws['!cols']=hdrs.map((h,i)=>({wch:Math.min(Math.max(h.length,...wsData.slice(1).map(r=>String(r[i]||'').length))+2,40)}));
@@ -1264,6 +1262,127 @@ function xportFl(){
   XLSX.utils.book_append_sheet(wb,ws,'FilteredList_'+flDay);
   XLSX.writeFile(wb,'filtered_list_'+flDay+'.xlsx');
 }
+
+
+// ── CATEGORY PERFORMANCE ─────────────────────────────────────────────────
+const HOUR_CAT = {"hour_l1":[{"City":"Binh Duong","Hour Slot":"10h-12h","L1":"Cơm","items":58,"orders":11,"no_sale":53,"avg_ado":0.19,"pct_no_sale":91.4},{"City":"Binh Duong","Hour Slot":"10h-12h","L1":"Others","items":87,"orders":6,"no_sale":83,"avg_ado":0.069,"pct_no_sale":95.4},{"City":"Binh Duong","Hour Slot":"10h-12h","L1":"Bún/Phở/Mì/Miến","items":54,"orders":4,"no_sale":51,"avg_ado":0.074,"pct_no_sale":94.4},{"City":"Binh Duong","Hour Slot":"10h-12h","L1":"Thịt, Trứng","items":19,"orders":2,"no_sale":18,"avg_ado":0.105,"pct_no_sale":94.7},{"City":"Binh Duong","Hour Slot":"10h-12h","L1":"Đồ ăn vặt","items":9,"orders":2,"no_sale":7,"avg_ado":0.222,"pct_no_sale":77.8},{"City":"Binh Duong","Hour Slot":"10h-12h","L1":"Bánh truyền thống","items":14,"orders":1,"no_sale":13,"avg_ado":0.071,"pct_no_sale":92.9},{"City":"Binh Duong","Hour Slot":"10h-12h","L1":"Cháo/Soup/Gỏi","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"10h-12h","L1":"Ẩm thực quốc tế","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"12h-13h","L1":"Cơm","items":60,"orders":11,"no_sale":55,"avg_ado":0.183,"pct_no_sale":91.7},{"City":"Binh Duong","Hour Slot":"12h-13h","L1":"Bún/Phở/Mì/Miến","items":57,"orders":3,"no_sale":55,"avg_ado":0.053,"pct_no_sale":96.5},{"City":"Binh Duong","Hour Slot":"12h-13h","L1":"Trà","items":48,"orders":3,"no_sale":45,"avg_ado":0.062,"pct_no_sale":93.8},{"City":"Binh Duong","Hour Slot":"12h-13h","L1":"Bánh truyền thống","items":6,"orders":1,"no_sale":5,"avg_ado":0.167,"pct_no_sale":83.3},{"City":"Binh Duong","Hour Slot":"12h-13h","L1":"Đồ ăn vặt","items":12,"orders":1,"no_sale":11,"avg_ado":0.083,"pct_no_sale":91.7},{"City":"Binh Duong","Hour Slot":"12h-13h","L1":"Bánh Âu Á","items":7,"orders":0,"no_sale":7,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"12h-13h","L1":"Tráng miệng","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"12h-13h","L1":"Đồ ăn nhanh","items":10,"orders":0,"no_sale":10,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"12h-13h","L1":"Ẩm thực quốc tế","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"13h-16h","L1":"Cà Phê","items":87,"orders":5,"no_sale":83,"avg_ado":0.057,"pct_no_sale":95.4},{"City":"Binh Duong","Hour Slot":"13h-16h","L1":"Trà","items":24,"orders":5,"no_sale":20,"avg_ado":0.208,"pct_no_sale":83.3},{"City":"Binh Duong","Hour Slot":"13h-16h","L1":"Bánh truyền thống","items":5,"orders":2,"no_sale":4,"avg_ado":0.4,"pct_no_sale":80.0},{"City":"Binh Duong","Hour Slot":"13h-16h","L1":"Đồ ăn vặt","items":16,"orders":1,"no_sale":15,"avg_ado":0.062,"pct_no_sale":93.8},{"City":"Binh Duong","Hour Slot":"13h-16h","L1":"Bánh Âu Á","items":11,"orders":0,"no_sale":11,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"13h-16h","L1":"Tráng miệng","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"13h-16h","L1":"Đồ ăn dinh dưỡng","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Trà","items":50,"orders":5,"no_sale":46,"avg_ado":0.1,"pct_no_sale":92.0},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Others","items":61,"orders":2,"no_sale":59,"avg_ado":0.033,"pct_no_sale":96.7},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Thịt, Trứng","items":28,"orders":2,"no_sale":27,"avg_ado":0.071,"pct_no_sale":96.4},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Bún/Phở/Mì/Miến","items":29,"orders":1,"no_sale":28,"avg_ado":0.034,"pct_no_sale":96.6},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Đồ ăn vặt","items":9,"orders":1,"no_sale":8,"avg_ado":0.111,"pct_no_sale":88.9},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Bánh truyền thống","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Bánh Âu Á","items":7,"orders":0,"no_sale":7,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Cháo/Soup/Gỏi","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Cơm","items":20,"orders":0,"no_sale":20,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Tráng miệng","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Đồ ăn dinh dưỡng","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Ẩm thực quốc tế","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"17h-20h","L1":"Cơm","items":53,"orders":16,"no_sale":44,"avg_ado":0.302,"pct_no_sale":83.0},{"City":"Binh Duong","Hour Slot":"17h-20h","L1":"Others","items":90,"orders":11,"no_sale":82,"avg_ado":0.122,"pct_no_sale":91.1},{"City":"Binh Duong","Hour Slot":"17h-20h","L1":"Bún/Phở/Mì/Miến","items":57,"orders":8,"no_sale":51,"avg_ado":0.14,"pct_no_sale":89.5},{"City":"Binh Duong","Hour Slot":"17h-20h","L1":"Thịt, Trứng","items":21,"orders":3,"no_sale":19,"avg_ado":0.143,"pct_no_sale":90.5},{"City":"Binh Duong","Hour Slot":"17h-20h","L1":"Đồ ăn vặt","items":11,"orders":2,"no_sale":9,"avg_ado":0.182,"pct_no_sale":81.8},{"City":"Binh Duong","Hour Slot":"17h-20h","L1":"Bánh truyền thống","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"17h-20h","L1":"Tráng miệng","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"17h-20h","L1":"Ẩm thực quốc tế","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Cơm","items":57,"orders":19,"no_sale":46,"avg_ado":0.333,"pct_no_sale":80.7},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Bún/Phở/Mì/Miến","items":41,"orders":8,"no_sale":36,"avg_ado":0.195,"pct_no_sale":87.8},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Trà","items":48,"orders":7,"no_sale":43,"avg_ado":0.146,"pct_no_sale":89.6},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Thịt, Trứng","items":20,"orders":6,"no_sale":17,"avg_ado":0.3,"pct_no_sale":85.0},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Bánh truyền thống","items":16,"orders":2,"no_sale":14,"avg_ado":0.125,"pct_no_sale":87.5},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Đồ ăn vặt","items":11,"orders":2,"no_sale":9,"avg_ado":0.182,"pct_no_sale":81.8},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Tráng miệng","items":2,"orders":1,"no_sale":1,"avg_ado":0.5,"pct_no_sale":50.0},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Bánh Âu Á","items":7,"orders":0,"no_sale":7,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Cháo/Soup/Gỏi","items":3,"orders":0,"no_sale":3,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Đồ ăn nhanh","items":6,"orders":0,"no_sale":6,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Ẩm thực quốc tế","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"22h-5h","L1":"Bánh truyền thống","items":17,"orders":0,"no_sale":17,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"22h-5h","L1":"Bún/Phở/Mì/Miến","items":31,"orders":0,"no_sale":31,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"22h-5h","L1":"Cháo/Soup/Gỏi","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"22h-5h","L1":"Cơm","items":23,"orders":0,"no_sale":23,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"22h-5h","L1":"Others","items":95,"orders":0,"no_sale":95,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"22h-5h","L1":"Thịt, Trứng","items":33,"orders":0,"no_sale":33,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"22h-5h","L1":"Tráng miệng","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"22h-5h","L1":"Đồ ăn vặt","items":11,"orders":0,"no_sale":11,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"22h-5h","L1":"Ẩm thực quốc tế","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"5h-9h","L1":"Bánh truyền thống","items":14,"orders":0,"no_sale":14,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"5h-9h","L1":"Bánh Âu Á","items":11,"orders":0,"no_sale":11,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"5h-9h","L1":"Bún/Phở/Mì/Miến","items":77,"orders":0,"no_sale":77,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"5h-9h","L1":"Cháo/Soup/Gỏi","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"5h-9h","L1":"Cà Phê","items":103,"orders":0,"no_sale":103,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"5h-9h","L1":"Cơm","items":4,"orders":0,"no_sale":4,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"5h-9h","L1":"Thịt, Trứng","items":21,"orders":0,"no_sale":21,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Bánh truyền thống","items":15,"orders":0,"no_sale":15,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Bánh Âu Á","items":7,"orders":0,"no_sale":7,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Bún/Phở/Mì/Miến","items":56,"orders":0,"no_sale":56,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Cháo/Soup/Gỏi","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Cà Phê","items":80,"orders":0,"no_sale":80,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Cơm","items":50,"orders":0,"no_sale":50,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Trà","items":21,"orders":0,"no_sale":21,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Đồ ăn nhanh","items":8,"orders":0,"no_sale":8,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Đồ ăn vặt","items":5,"orders":0,"no_sale":5,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Ẩm thực quốc tế","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"10h-12h","L1":"Bún/Phở/Mì/Miến","items":27,"orders":8,"no_sale":20,"avg_ado":0.296,"pct_no_sale":74.1},{"City":"Hai Phong","Hour Slot":"10h-12h","L1":"Cơm","items":7,"orders":6,"no_sale":2,"avg_ado":0.857,"pct_no_sale":28.6},{"City":"Hai Phong","Hour Slot":"10h-12h","L1":"Đồ uống không cồn khác","items":38,"orders":5,"no_sale":35,"avg_ado":0.132,"pct_no_sale":92.1},{"City":"Hai Phong","Hour Slot":"10h-12h","L1":"Others","items":17,"orders":2,"no_sale":16,"avg_ado":0.118,"pct_no_sale":94.1},{"City":"Hai Phong","Hour Slot":"10h-12h","L1":"Bánh truyền thống","items":15,"orders":0,"no_sale":15,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"10h-12h","L1":"Thịt, Trứng","items":4,"orders":0,"no_sale":4,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"10h-12h","L1":"Đồ ăn vặt","items":3,"orders":0,"no_sale":3,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"10h-12h","L1":"Ẩm thực quốc tế","items":3,"orders":0,"no_sale":3,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"12h-13h","L1":"Bún/Phở/Mì/Miến","items":25,"orders":7,"no_sale":19,"avg_ado":0.28,"pct_no_sale":76.0},{"City":"Hai Phong","Hour Slot":"12h-13h","L1":"Cơm","items":6,"orders":5,"no_sale":2,"avg_ado":0.833,"pct_no_sale":33.3},{"City":"Hai Phong","Hour Slot":"12h-13h","L1":"Đồ uống không cồn khác","items":16,"orders":5,"no_sale":13,"avg_ado":0.312,"pct_no_sale":81.2},{"City":"Hai Phong","Hour Slot":"12h-13h","L1":"Trà","items":27,"orders":1,"no_sale":26,"avg_ado":0.037,"pct_no_sale":96.3},{"City":"Hai Phong","Hour Slot":"12h-13h","L1":"Bánh truyền thống","items":5,"orders":0,"no_sale":5,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"12h-13h","L1":"Thịt, Trứng","items":3,"orders":0,"no_sale":3,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"12h-13h","L1":"Đồ ăn vặt","items":7,"orders":0,"no_sale":7,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"12h-13h","L1":"Ẩm thực quốc tế","items":3,"orders":0,"no_sale":3,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"13h-16h","L1":"Đồ uống không cồn khác","items":16,"orders":9,"no_sale":11,"avg_ado":0.562,"pct_no_sale":68.8},{"City":"Hai Phong","Hour Slot":"13h-16h","L1":"Trà","items":27,"orders":4,"no_sale":24,"avg_ado":0.148,"pct_no_sale":88.9},{"City":"Hai Phong","Hour Slot":"13h-16h","L1":"Đồ ăn vặt","items":16,"orders":3,"no_sale":14,"avg_ado":0.188,"pct_no_sale":87.5},{"City":"Hai Phong","Hour Slot":"13h-16h","L1":"Bánh truyền thống","items":4,"orders":0,"no_sale":4,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"13h-16h","L1":"Bánh Âu Á","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"13h-16h","L1":"Cháo/Soup/Gỏi","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"13h-16h","L1":"Cà Phê","items":10,"orders":0,"no_sale":10,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"16h-17h","L1":"Đồ uống không cồn khác","items":16,"orders":9,"no_sale":11,"avg_ado":0.562,"pct_no_sale":68.8},{"City":"Hai Phong","Hour Slot":"16h-17h","L1":"Trà","items":27,"orders":4,"no_sale":24,"avg_ado":0.148,"pct_no_sale":88.9},{"City":"Hai Phong","Hour Slot":"16h-17h","L1":"Đồ ăn vặt","items":11,"orders":3,"no_sale":9,"avg_ado":0.273,"pct_no_sale":81.8},{"City":"Hai Phong","Hour Slot":"16h-17h","L1":"Others","items":11,"orders":2,"no_sale":10,"avg_ado":0.182,"pct_no_sale":90.9},{"City":"Hai Phong","Hour Slot":"16h-17h","L1":"Bánh truyền thống","items":8,"orders":0,"no_sale":8,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"16h-17h","L1":"Bánh Âu Á","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"16h-17h","L1":"Bún/Phở/Mì/Miến","items":11,"orders":0,"no_sale":11,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"16h-17h","L1":"Thịt, Trứng","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"16h-17h","L1":"Ẩm thực quốc tế","items":4,"orders":0,"no_sale":4,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"17h-20h","L1":"Bún/Phở/Mì/Miến","items":26,"orders":10,"no_sale":19,"avg_ado":0.385,"pct_no_sale":73.1},{"City":"Hai Phong","Hour Slot":"17h-20h","L1":"Cơm","items":6,"orders":8,"no_sale":0,"avg_ado":1.333,"pct_no_sale":0.0},{"City":"Hai Phong","Hour Slot":"17h-20h","L1":"Others","items":38,"orders":8,"no_sale":34,"avg_ado":0.211,"pct_no_sale":89.5},{"City":"Hai Phong","Hour Slot":"17h-20h","L1":"Đồ ăn vặt","items":14,"orders":4,"no_sale":11,"avg_ado":0.286,"pct_no_sale":78.6},{"City":"Hai Phong","Hour Slot":"17h-20h","L1":"Bánh Âu Á","items":4,"orders":1,"no_sale":3,"avg_ado":0.25,"pct_no_sale":75.0},{"City":"Hai Phong","Hour Slot":"17h-20h","L1":"Thịt, Trứng","items":7,"orders":1,"no_sale":6,"avg_ado":0.143,"pct_no_sale":85.7},{"City":"Hai Phong","Hour Slot":"17h-20h","L1":"Ẩm thực quốc tế","items":3,"orders":0,"no_sale":3,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"20h-22h","L1":"Bún/Phở/Mì/Miến","items":24,"orders":12,"no_sale":16,"avg_ado":0.5,"pct_no_sale":66.7},{"City":"Hai Phong","Hour Slot":"20h-22h","L1":"Đồ uống không cồn khác","items":16,"orders":10,"no_sale":10,"avg_ado":0.625,"pct_no_sale":62.5},{"City":"Hai Phong","Hour Slot":"20h-22h","L1":"Cơm","items":5,"orders":8,"no_sale":0,"avg_ado":1.6,"pct_no_sale":0.0},{"City":"Hai Phong","Hour Slot":"20h-22h","L1":"Trà","items":27,"orders":8,"no_sale":23,"avg_ado":0.296,"pct_no_sale":85.2},{"City":"Hai Phong","Hour Slot":"20h-22h","L1":"Đồ ăn vặt","items":12,"orders":6,"no_sale":9,"avg_ado":0.5,"pct_no_sale":75.0},{"City":"Hai Phong","Hour Slot":"20h-22h","L1":"Bánh Âu Á","items":2,"orders":1,"no_sale":1,"avg_ado":0.5,"pct_no_sale":50.0},{"City":"Hai Phong","Hour Slot":"20h-22h","L1":"Bánh truyền thống","items":8,"orders":0,"no_sale":8,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"20h-22h","L1":"Thịt, Trứng","items":6,"orders":0,"no_sale":6,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"20h-22h","L1":"Ẩm thực quốc tế","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"22h-5h","L1":"Bánh truyền thống","items":12,"orders":0,"no_sale":12,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"22h-5h","L1":"Bánh Âu Á","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"22h-5h","L1":"Bún/Phở/Mì/Miến","items":20,"orders":0,"no_sale":20,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"22h-5h","L1":"Others","items":14,"orders":0,"no_sale":14,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"22h-5h","L1":"Thịt, Trứng","items":6,"orders":0,"no_sale":6,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"22h-5h","L1":"Đồ uống không cồn khác","items":38,"orders":0,"no_sale":38,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"22h-5h","L1":"Đồ ăn vặt","items":13,"orders":0,"no_sale":13,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"22h-5h","L1":"Ẩm thực quốc tế","items":4,"orders":0,"no_sale":4,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"5h-9h","L1":"Bánh truyền thống","items":14,"orders":0,"no_sale":14,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"5h-9h","L1":"Bún/Phở/Mì/Miến","items":35,"orders":0,"no_sale":35,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"5h-9h","L1":"Cà Phê","items":17,"orders":0,"no_sale":17,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"5h-9h","L1":"Thịt, Trứng","items":3,"orders":0,"no_sale":3,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"5h-9h","L1":"Đồ uống không cồn khác","items":38,"orders":0,"no_sale":38,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"9h-10h","L1":"Bánh truyền thống","items":14,"orders":0,"no_sale":14,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"9h-10h","L1":"Bánh Âu Á","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"9h-10h","L1":"Bún/Phở/Mì/Miến","items":27,"orders":0,"no_sale":27,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"9h-10h","L1":"Cà Phê","items":13,"orders":0,"no_sale":13,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"9h-10h","L1":"Cơm","items":6,"orders":0,"no_sale":6,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"9h-10h","L1":"Trà","items":27,"orders":0,"no_sale":27,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"9h-10h","L1":"Đồ uống không cồn khác","items":16,"orders":0,"no_sale":16,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"9h-10h","L1":"Đồ ăn nhanh","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"9h-10h","L1":"Ẩm thực quốc tế","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0}],"hour_l2":[{"City":"Binh Duong","Hour Slot":"10h-12h","L1":"Bánh truyền thống","L2":"Bánh cuốn/ Bánh ướt","items":7,"orders":1,"no_sale":6,"avg_ado":0.143,"pct_no_sale":85.7},{"City":"Binh Duong","Hour Slot":"10h-12h","L1":"Bánh truyền thống","L2":"Bánh hỏi","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"10h-12h","L1":"Bánh truyền thống","L2":"Bánh mì","items":5,"orders":0,"no_sale":5,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"10h-12h","L1":"Bánh truyền thống","L2":"Bánh xèo/ Bánh khọt","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"10h-12h","L1":"Bún/Phở/Mì/Miến","L2":"Bún","items":17,"orders":3,"no_sale":15,"avg_ado":0.176,"pct_no_sale":88.2},{"City":"Binh Duong","Hour Slot":"10h-12h","L1":"Bún/Phở/Mì/Miến","L2":"Hủ tiếu","items":16,"orders":1,"no_sale":15,"avg_ado":0.062,"pct_no_sale":93.8},{"City":"Binh Duong","Hour Slot":"10h-12h","L1":"Bún/Phở/Mì/Miến","L2":"Bánh canh","items":12,"orders":0,"no_sale":12,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"10h-12h","L1":"Bún/Phở/Mì/Miến","L2":"Mì","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"10h-12h","L1":"Cháo/Soup/Gỏi","L2":"Soup","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"10h-12h","L1":"Cơm","L2":"Cơm - Không, trắng, cháy","items":46,"orders":11,"no_sale":41,"avg_ado":0.239,"pct_no_sale":89.1},{"City":"Binh Duong","Hour Slot":"10h-12h","L1":"Cơm","L2":"Cơm chiên","items":6,"orders":0,"no_sale":6,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"10h-12h","L1":"Cơm","L2":"Cơm trộn","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"10h-12h","L1":"Cơm","L2":"Xôi","items":5,"orders":0,"no_sale":5,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"10h-12h","L1":"Others","L2":"Others","items":87,"orders":6,"no_sale":83,"avg_ado":0.069,"pct_no_sale":95.4},{"City":"Binh Duong","Hour Slot":"10h-12h","L1":"Thịt, Trứng","L2":"Heo, Bò","items":19,"orders":2,"no_sale":18,"avg_ado":0.105,"pct_no_sale":94.7},{"City":"Binh Duong","Hour Slot":"10h-12h","L1":"Đồ ăn vặt","L2":"Bánh tráng","items":6,"orders":1,"no_sale":5,"avg_ado":0.167,"pct_no_sale":83.3},{"City":"Binh Duong","Hour Slot":"10h-12h","L1":"Đồ ăn vặt","L2":"Các món cuốn","items":3,"orders":1,"no_sale":2,"avg_ado":0.333,"pct_no_sale":66.7},{"City":"Binh Duong","Hour Slot":"10h-12h","L1":"Ẩm thực quốc tế","L2":"Món Hàn","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"12h-13h","L1":"Bánh truyền thống","L2":"Bánh cuốn/ Bánh ướt","items":5,"orders":1,"no_sale":4,"avg_ado":0.2,"pct_no_sale":80.0},{"City":"Binh Duong","Hour Slot":"12h-13h","L1":"Bánh truyền thống","L2":"Bánh hỏi","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"12h-13h","L1":"Bánh Âu Á","L2":"Bánh Âu Á - Khác","items":7,"orders":0,"no_sale":7,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"12h-13h","L1":"Bún/Phở/Mì/Miến","L2":"Bún","items":15,"orders":2,"no_sale":14,"avg_ado":0.133,"pct_no_sale":93.3},{"City":"Binh Duong","Hour Slot":"12h-13h","L1":"Bún/Phở/Mì/Miến","L2":"Hủ tiếu","items":16,"orders":1,"no_sale":15,"avg_ado":0.062,"pct_no_sale":93.8},{"City":"Binh Duong","Hour Slot":"12h-13h","L1":"Bún/Phở/Mì/Miến","L2":"Bánh canh","items":12,"orders":0,"no_sale":12,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"12h-13h","L1":"Bún/Phở/Mì/Miến","L2":"Mì","items":14,"orders":0,"no_sale":14,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"12h-13h","L1":"Cơm","L2":"Cơm - Không, trắng, cháy","items":46,"orders":11,"no_sale":41,"avg_ado":0.239,"pct_no_sale":89.1},{"City":"Binh Duong","Hour Slot":"12h-13h","L1":"Cơm","L2":"Cơm chiên","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"12h-13h","L1":"Cơm","L2":"Cơm trộn","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"12h-13h","L1":"Cơm","L2":"Xôi","items":4,"orders":0,"no_sale":4,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"12h-13h","L1":"Trà","L2":"Trà - Khác","items":48,"orders":3,"no_sale":45,"avg_ado":0.062,"pct_no_sale":93.8},{"City":"Binh Duong","Hour Slot":"12h-13h","L1":"Tráng miệng","L2":"Kem","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"12h-13h","L1":"Đồ ăn nhanh","L2":"Gà rán","items":10,"orders":0,"no_sale":10,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"12h-13h","L1":"Đồ ăn vặt","L2":"Các món cuốn","items":3,"orders":1,"no_sale":2,"avg_ado":0.333,"pct_no_sale":66.7},{"City":"Binh Duong","Hour Slot":"12h-13h","L1":"Đồ ăn vặt","L2":"Bánh tráng","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"12h-13h","L1":"Ẩm thực quốc tế","L2":"Món Hàn","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"13h-16h","L1":"Bánh truyền thống","L2":"Bánh cuốn/ Bánh ướt","items":5,"orders":2,"no_sale":4,"avg_ado":0.4,"pct_no_sale":80.0},{"City":"Binh Duong","Hour Slot":"13h-16h","L1":"Bánh Âu Á","L2":"Bánh Âu Á - Khác","items":11,"orders":0,"no_sale":11,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"13h-16h","L1":"Cà Phê","L2":"Cà phê","items":87,"orders":5,"no_sale":83,"avg_ado":0.057,"pct_no_sale":95.4},{"City":"Binh Duong","Hour Slot":"13h-16h","L1":"Trà","L2":"Trà - Khác","items":24,"orders":5,"no_sale":20,"avg_ado":0.208,"pct_no_sale":83.3},{"City":"Binh Duong","Hour Slot":"13h-16h","L1":"Tráng miệng","L2":"Kem","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"13h-16h","L1":"Đồ ăn dinh dưỡng","L2":"Salad","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"13h-16h","L1":"Đồ ăn vặt","L2":"Các món cuốn","items":11,"orders":1,"no_sale":10,"avg_ado":0.091,"pct_no_sale":90.9},{"City":"Binh Duong","Hour Slot":"13h-16h","L1":"Đồ ăn vặt","L2":"Bánh tráng","items":5,"orders":0,"no_sale":5,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Bánh truyền thống","L2":"Bánh mì","items":7,"orders":0,"no_sale":7,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Bánh truyền thống","L2":"Bánh xèo/ Bánh khọt","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Bánh Âu Á","L2":"Bánh Âu Á - Khác","items":7,"orders":0,"no_sale":7,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Bún/Phở/Mì/Miến","L2":"Hủ tiếu","items":17,"orders":1,"no_sale":16,"avg_ado":0.059,"pct_no_sale":94.1},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Bún/Phở/Mì/Miến","L2":"Mì","items":12,"orders":0,"no_sale":12,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Cháo/Soup/Gỏi","L2":"Soup","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Cơm","L2":"Cơm chiên","items":16,"orders":0,"no_sale":16,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Cơm","L2":"Xôi","items":4,"orders":0,"no_sale":4,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Others","L2":"Others","items":61,"orders":2,"no_sale":59,"avg_ado":0.033,"pct_no_sale":96.7},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Thịt, Trứng","L2":"Heo, Bò","items":28,"orders":2,"no_sale":27,"avg_ado":0.071,"pct_no_sale":96.4},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Trà","L2":"Trà - Khác","items":50,"orders":5,"no_sale":46,"avg_ado":0.1,"pct_no_sale":92.0},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Tráng miệng","L2":"Kem","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Đồ ăn dinh dưỡng","L2":"Salad","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Đồ ăn vặt","L2":"Các món cuốn","items":6,"orders":1,"no_sale":5,"avg_ado":0.167,"pct_no_sale":83.3},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Đồ ăn vặt","L2":"Bánh tráng","items":3,"orders":0,"no_sale":3,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"16h-17h","L1":"Ẩm thực quốc tế","L2":"Món Hàn","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"17h-20h","L1":"Bánh truyền thống","L2":"Bánh xèo/ Bánh khọt","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"17h-20h","L1":"Bún/Phở/Mì/Miến","L2":"Bún","items":20,"orders":6,"no_sale":16,"avg_ado":0.3,"pct_no_sale":80.0},{"City":"Binh Duong","Hour Slot":"17h-20h","L1":"Bún/Phở/Mì/Miến","L2":"Hủ tiếu","items":16,"orders":2,"no_sale":14,"avg_ado":0.125,"pct_no_sale":87.5},{"City":"Binh Duong","Hour Slot":"17h-20h","L1":"Bún/Phở/Mì/Miến","L2":"Bánh canh","items":12,"orders":0,"no_sale":12,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"17h-20h","L1":"Bún/Phở/Mì/Miến","L2":"Mì","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"17h-20h","L1":"Cơm","L2":"Cơm - Không, trắng, cháy","items":46,"orders":15,"no_sale":38,"avg_ado":0.326,"pct_no_sale":82.6},{"City":"Binh Duong","Hour Slot":"17h-20h","L1":"Cơm","L2":"Cơm chiên","items":6,"orders":1,"no_sale":5,"avg_ado":0.167,"pct_no_sale":83.3},{"City":"Binh Duong","Hour Slot":"17h-20h","L1":"Cơm","L2":"Cơm trộn","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"17h-20h","L1":"Others","L2":"Others","items":90,"orders":11,"no_sale":82,"avg_ado":0.122,"pct_no_sale":91.1},{"City":"Binh Duong","Hour Slot":"17h-20h","L1":"Thịt, Trứng","L2":"Heo, Bò","items":21,"orders":3,"no_sale":19,"avg_ado":0.143,"pct_no_sale":90.5},{"City":"Binh Duong","Hour Slot":"17h-20h","L1":"Tráng miệng","L2":"Kem","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"17h-20h","L1":"Đồ ăn vặt","L2":"Bánh tráng","items":7,"orders":1,"no_sale":6,"avg_ado":0.143,"pct_no_sale":85.7},{"City":"Binh Duong","Hour Slot":"17h-20h","L1":"Đồ ăn vặt","L2":"Các món cuốn","items":4,"orders":1,"no_sale":3,"avg_ado":0.25,"pct_no_sale":75.0},{"City":"Binh Duong","Hour Slot":"17h-20h","L1":"Ẩm thực quốc tế","L2":"Món Hàn","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Bánh truyền thống","L2":"Bánh mì","items":14,"orders":1,"no_sale":13,"avg_ado":0.071,"pct_no_sale":92.9},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Bánh truyền thống","L2":"Bánh xèo/ Bánh khọt","items":2,"orders":1,"no_sale":1,"avg_ado":0.5,"pct_no_sale":50.0},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Bánh Âu Á","L2":"Bánh Âu Á - Khác","items":7,"orders":0,"no_sale":7,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Bún/Phở/Mì/Miến","L2":"Bún","items":28,"orders":8,"no_sale":23,"avg_ado":0.286,"pct_no_sale":82.1},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Bún/Phở/Mì/Miến","L2":"Mì","items":13,"orders":0,"no_sale":13,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Cháo/Soup/Gỏi","L2":"Soup","items":3,"orders":0,"no_sale":3,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Cơm","L2":"Cơm - Không, trắng, cháy","items":47,"orders":18,"no_sale":37,"avg_ado":0.383,"pct_no_sale":78.7},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Cơm","L2":"Cơm chiên","items":6,"orders":1,"no_sale":5,"avg_ado":0.167,"pct_no_sale":83.3},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Cơm","L2":"Xôi","items":4,"orders":0,"no_sale":4,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Thịt, Trứng","L2":"Heo, Bò","items":20,"orders":6,"no_sale":17,"avg_ado":0.3,"pct_no_sale":85.0},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Trà","L2":"Trà - Khác","items":48,"orders":7,"no_sale":43,"avg_ado":0.146,"pct_no_sale":89.6},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Tráng miệng","L2":"Kem","items":2,"orders":1,"no_sale":1,"avg_ado":0.5,"pct_no_sale":50.0},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Đồ ăn nhanh","L2":"Gà rán","items":6,"orders":0,"no_sale":6,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Đồ ăn vặt","L2":"Bánh tráng","items":8,"orders":1,"no_sale":7,"avg_ado":0.125,"pct_no_sale":87.5},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Đồ ăn vặt","L2":"Các món cuốn","items":3,"orders":1,"no_sale":2,"avg_ado":0.333,"pct_no_sale":66.7},{"City":"Binh Duong","Hour Slot":"20h-22h","L1":"Ẩm thực quốc tế","L2":"Món Hàn","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"22h-5h","L1":"Bánh truyền thống","L2":"Bánh cuốn/ Bánh ướt","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"22h-5h","L1":"Bánh truyền thống","L2":"Bánh mì","items":6,"orders":0,"no_sale":6,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"22h-5h","L1":"Bánh truyền thống","L2":"Bánh xèo/ Bánh khọt","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"22h-5h","L1":"Bún/Phở/Mì/Miến","L2":"Bún đậu","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"22h-5h","L1":"Bún/Phở/Mì/Miến","L2":"Hủ tiếu","items":18,"orders":0,"no_sale":18,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"22h-5h","L1":"Bún/Phở/Mì/Miến","L2":"Mì","items":12,"orders":0,"no_sale":12,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"22h-5h","L1":"Cháo/Soup/Gỏi","L2":"Soup","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"22h-5h","L1":"Cơm","L2":"Cơm chiên","items":17,"orders":0,"no_sale":17,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"22h-5h","L1":"Cơm","L2":"Xôi","items":6,"orders":0,"no_sale":6,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"22h-5h","L1":"Others","L2":"Others","items":95,"orders":0,"no_sale":95,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"22h-5h","L1":"Thịt, Trứng","L2":"Heo, Bò","items":33,"orders":0,"no_sale":33,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"22h-5h","L1":"Tráng miệng","L2":"Kem","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"22h-5h","L1":"Đồ ăn vặt","L2":"Bánh tráng","items":5,"orders":0,"no_sale":5,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"22h-5h","L1":"Đồ ăn vặt","L2":"Các món cuốn","items":6,"orders":0,"no_sale":6,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"22h-5h","L1":"Ẩm thực quốc tế","L2":"Món Hàn","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"5h-9h","L1":"Bánh truyền thống","L2":"Bánh cuốn/ Bánh ướt","items":4,"orders":0,"no_sale":4,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"5h-9h","L1":"Bánh truyền thống","L2":"Bánh hỏi","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"5h-9h","L1":"Bánh truyền thống","L2":"Bánh mì","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"5h-9h","L1":"Bánh Âu Á","L2":"Bánh Âu Á - Khác","items":11,"orders":0,"no_sale":11,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"5h-9h","L1":"Bún/Phở/Mì/Miến","L2":"Bánh canh","items":12,"orders":0,"no_sale":12,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"5h-9h","L1":"Bún/Phở/Mì/Miến","L2":"Bún","items":29,"orders":0,"no_sale":29,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"5h-9h","L1":"Bún/Phở/Mì/Miến","L2":"Hủ tiếu","items":16,"orders":0,"no_sale":16,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"5h-9h","L1":"Bún/Phở/Mì/Miến","L2":"Mì","items":20,"orders":0,"no_sale":20,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"5h-9h","L1":"Cháo/Soup/Gỏi","L2":"Soup","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"5h-9h","L1":"Cà Phê","L2":"Cà phê","items":103,"orders":0,"no_sale":103,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"5h-9h","L1":"Cơm","L2":"Xôi","items":4,"orders":0,"no_sale":4,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"5h-9h","L1":"Thịt, Trứng","L2":"Heo, Bò","items":21,"orders":0,"no_sale":21,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Bánh truyền thống","L2":"Bánh cuốn/ Bánh ướt","items":4,"orders":0,"no_sale":4,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Bánh truyền thống","L2":"Bánh hỏi","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Bánh truyền thống","L2":"Bánh mì","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Bánh truyền thống","L2":"Bánh xèo/ Bánh khọt","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Bánh Âu Á","L2":"Bánh Âu Á - Khác","items":7,"orders":0,"no_sale":7,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Bún/Phở/Mì/Miến","L2":"Bánh canh","items":11,"orders":0,"no_sale":11,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Bún/Phở/Mì/Miến","L2":"Bún","items":14,"orders":0,"no_sale":14,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Bún/Phở/Mì/Miến","L2":"Hủ tiếu","items":15,"orders":0,"no_sale":15,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Bún/Phở/Mì/Miến","L2":"Mì","items":16,"orders":0,"no_sale":16,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Cháo/Soup/Gỏi","L2":"Soup","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Cà Phê","L2":"Cà phê","items":80,"orders":0,"no_sale":80,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Cơm","L2":"Cơm - Không, trắng, cháy","items":47,"orders":0,"no_sale":47,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Cơm","L2":"Xôi","items":3,"orders":0,"no_sale":3,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Trà","L2":"Trà - Khác","items":21,"orders":0,"no_sale":21,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Đồ ăn nhanh","L2":"Gà rán","items":8,"orders":0,"no_sale":8,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Đồ ăn vặt","L2":"Các món cuốn","items":5,"orders":0,"no_sale":5,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","L1":"Ẩm thực quốc tế","L2":"Món Hàn","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"10h-12h","L1":"Bánh truyền thống","L2":"Bánh cuốn/ Bánh ướt","items":5,"orders":0,"no_sale":5,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"10h-12h","L1":"Bánh truyền thống","L2":"Bánh mì","items":10,"orders":0,"no_sale":10,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"10h-12h","L1":"Bún/Phở/Mì/Miến","L2":"Bún","items":13,"orders":4,"no_sale":9,"avg_ado":0.308,"pct_no_sale":69.2},{"City":"Hai Phong","Hour Slot":"10h-12h","L1":"Bún/Phở/Mì/Miến","L2":"Phở","items":10,"orders":3,"no_sale":8,"avg_ado":0.3,"pct_no_sale":80.0},{"City":"Hai Phong","Hour Slot":"10h-12h","L1":"Bún/Phở/Mì/Miến","L2":"Mì","items":4,"orders":1,"no_sale":3,"avg_ado":0.25,"pct_no_sale":75.0},{"City":"Hai Phong","Hour Slot":"10h-12h","L1":"Cơm","L2":"Cơm - Không, trắng, cháy","items":7,"orders":6,"no_sale":2,"avg_ado":0.857,"pct_no_sale":28.6},{"City":"Hai Phong","Hour Slot":"10h-12h","L1":"Others","L2":"Others","items":17,"orders":2,"no_sale":16,"avg_ado":0.118,"pct_no_sale":94.1},{"City":"Hai Phong","Hour Slot":"10h-12h","L1":"Thịt, Trứng","L2":"Gà, Vịt","items":3,"orders":0,"no_sale":3,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"10h-12h","L1":"Thịt, Trứng","L2":"Heo, Bò","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"10h-12h","L1":"Đồ uống không cồn khác","L2":"Đồ uống không cồn khác - Khác","items":38,"orders":5,"no_sale":35,"avg_ado":0.132,"pct_no_sale":92.1},{"City":"Hai Phong","Hour Slot":"10h-12h","L1":"Đồ ăn vặt","L2":"Bánh tráng","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"10h-12h","L1":"Đồ ăn vặt","L2":"Xiên que/ Viên chiên","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"10h-12h","L1":"Ẩm thực quốc tế","L2":"Món Hàn","items":3,"orders":0,"no_sale":3,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"12h-13h","L1":"Bánh truyền thống","L2":"Bánh cuốn/ Bánh ướt","items":5,"orders":0,"no_sale":5,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"12h-13h","L1":"Bún/Phở/Mì/Miến","L2":"Bún","items":13,"orders":4,"no_sale":9,"avg_ado":0.308,"pct_no_sale":69.2},{"City":"Hai Phong","Hour Slot":"12h-13h","L1":"Bún/Phở/Mì/Miến","L2":"Phở","items":10,"orders":3,"no_sale":8,"avg_ado":0.3,"pct_no_sale":80.0},{"City":"Hai Phong","Hour Slot":"12h-13h","L1":"Bún/Phở/Mì/Miến","L2":"Mì","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"12h-13h","L1":"Cơm","L2":"Cơm - Không, trắng, cháy","items":6,"orders":5,"no_sale":2,"avg_ado":0.833,"pct_no_sale":33.3},{"City":"Hai Phong","Hour Slot":"12h-13h","L1":"Thịt, Trứng","L2":"Gà, Vịt","items":3,"orders":0,"no_sale":3,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"12h-13h","L1":"Trà","L2":"Trà - Khác","items":27,"orders":1,"no_sale":26,"avg_ado":0.037,"pct_no_sale":96.3},{"City":"Hai Phong","Hour Slot":"12h-13h","L1":"Đồ uống không cồn khác","L2":"Đồ uống không cồn khác - Khác","items":16,"orders":5,"no_sale":13,"avg_ado":0.312,"pct_no_sale":81.2},{"City":"Hai Phong","Hour Slot":"12h-13h","L1":"Đồ ăn vặt","L2":"Bánh tráng","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"12h-13h","L1":"Đồ ăn vặt","L2":"Xiên que/ Viên chiên","items":5,"orders":0,"no_sale":5,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"12h-13h","L1":"Ẩm thực quốc tế","L2":"Món Hàn","items":3,"orders":0,"no_sale":3,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"13h-16h","L1":"Bánh truyền thống","L2":"Bánh cuốn/ Bánh ướt","items":4,"orders":0,"no_sale":4,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"13h-16h","L1":"Bánh Âu Á","L2":"Bánh bông lan","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"13h-16h","L1":"Cháo/Soup/Gỏi","L2":"Gỏi","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"13h-16h","L1":"Cà Phê","L2":"Cà phê","items":10,"orders":0,"no_sale":10,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"13h-16h","L1":"Trà","L2":"Trà - Khác","items":27,"orders":4,"no_sale":24,"avg_ado":0.148,"pct_no_sale":88.9},{"City":"Hai Phong","Hour Slot":"13h-16h","L1":"Đồ uống không cồn khác","L2":"Đồ uống không cồn khác - Khác","items":16,"orders":9,"no_sale":11,"avg_ado":0.562,"pct_no_sale":68.8},{"City":"Hai Phong","Hour Slot":"13h-16h","L1":"Đồ ăn vặt","L2":"Nem chua","items":9,"orders":3,"no_sale":7,"avg_ado":0.333,"pct_no_sale":77.8},{"City":"Hai Phong","Hour Slot":"13h-16h","L1":"Đồ ăn vặt","L2":"Bánh tráng","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"13h-16h","L1":"Đồ ăn vặt","L2":"Xiên que/ Viên chiên","items":6,"orders":0,"no_sale":6,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"16h-17h","L1":"Bánh truyền thống","L2":"Bánh mì","items":8,"orders":0,"no_sale":8,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"16h-17h","L1":"Bánh Âu Á","L2":"Bánh bông lan","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"16h-17h","L1":"Bún/Phở/Mì/Miến","L2":"Hủ tiếu","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"16h-17h","L1":"Bún/Phở/Mì/Miến","L2":"Mì","items":10,"orders":0,"no_sale":10,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"16h-17h","L1":"Others","L2":"Others","items":11,"orders":2,"no_sale":10,"avg_ado":0.182,"pct_no_sale":90.9},{"City":"Hai Phong","Hour Slot":"16h-17h","L1":"Thịt, Trứng","L2":"Gà, Vịt","items":7,"orders":0,"no_sale":7,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"16h-17h","L1":"Thịt, Trứng","L2":"Heo, Bò","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"16h-17h","L1":"Trà","L2":"Trà - Khác","items":27,"orders":4,"no_sale":24,"avg_ado":0.148,"pct_no_sale":88.9},{"City":"Hai Phong","Hour Slot":"16h-17h","L1":"Đồ uống không cồn khác","L2":"Đồ uống không cồn khác - Khác","items":16,"orders":9,"no_sale":11,"avg_ado":0.562,"pct_no_sale":68.8},{"City":"Hai Phong","Hour Slot":"16h-17h","L1":"Đồ ăn vặt","L2":"Nem chua","items":9,"orders":3,"no_sale":7,"avg_ado":0.333,"pct_no_sale":77.8},{"City":"Hai Phong","Hour Slot":"16h-17h","L1":"Đồ ăn vặt","L2":"Bánh tráng","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"16h-17h","L1":"Đồ ăn vặt","L2":"Xiên que/ Viên chiên","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"16h-17h","L1":"Ẩm thực quốc tế","L2":"Món Hàn","items":4,"orders":0,"no_sale":4,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"17h-20h","L1":"Bánh Âu Á","L2":"Bánh bông lan","items":4,"orders":1,"no_sale":3,"avg_ado":0.25,"pct_no_sale":75.0},{"City":"Hai Phong","Hour Slot":"17h-20h","L1":"Bún/Phở/Mì/Miến","L2":"Phở","items":10,"orders":6,"no_sale":7,"avg_ado":0.6,"pct_no_sale":70.0},{"City":"Hai Phong","Hour Slot":"17h-20h","L1":"Bún/Phở/Mì/Miến","L2":"Bún","items":13,"orders":4,"no_sale":9,"avg_ado":0.308,"pct_no_sale":69.2},{"City":"Hai Phong","Hour Slot":"17h-20h","L1":"Bún/Phở/Mì/Miến","L2":"Mì","items":3,"orders":0,"no_sale":3,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"17h-20h","L1":"Cơm","L2":"Cơm - Không, trắng, cháy","items":6,"orders":8,"no_sale":0,"avg_ado":1.333,"pct_no_sale":0.0},{"City":"Hai Phong","Hour Slot":"17h-20h","L1":"Others","L2":"Others","items":38,"orders":8,"no_sale":34,"avg_ado":0.211,"pct_no_sale":89.5},{"City":"Hai Phong","Hour Slot":"17h-20h","L1":"Thịt, Trứng","L2":"Gà, Vịt","items":5,"orders":1,"no_sale":4,"avg_ado":0.2,"pct_no_sale":80.0},{"City":"Hai Phong","Hour Slot":"17h-20h","L1":"Thịt, Trứng","L2":"Heo, Bò","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"17h-20h","L1":"Đồ ăn vặt","L2":"Nem chua","items":12,"orders":3,"no_sale":10,"avg_ado":0.25,"pct_no_sale":83.3},{"City":"Hai Phong","Hour Slot":"17h-20h","L1":"Đồ ăn vặt","L2":"Bánh tráng","items":1,"orders":1,"no_sale":0,"avg_ado":1.0,"pct_no_sale":0.0},{"City":"Hai Phong","Hour Slot":"17h-20h","L1":"Đồ ăn vặt","L2":"Xiên que/ Viên chiên","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"17h-20h","L1":"Ẩm thực quốc tế","L2":"Món Hàn","items":3,"orders":0,"no_sale":3,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"20h-22h","L1":"Bánh truyền thống","L2":"Bánh mì","items":8,"orders":0,"no_sale":8,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"20h-22h","L1":"Bánh Âu Á","L2":"Bánh bông lan","items":2,"orders":1,"no_sale":1,"avg_ado":0.5,"pct_no_sale":50.0},{"City":"Hai Phong","Hour Slot":"20h-22h","L1":"Bún/Phở/Mì/Miến","L2":"Phở","items":10,"orders":7,"no_sale":6,"avg_ado":0.7,"pct_no_sale":60.0},{"City":"Hai Phong","Hour Slot":"20h-22h","L1":"Bún/Phở/Mì/Miến","L2":"Bún","items":13,"orders":5,"no_sale":9,"avg_ado":0.385,"pct_no_sale":69.2},{"City":"Hai Phong","Hour Slot":"20h-22h","L1":"Bún/Phở/Mì/Miến","L2":"Mì","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"20h-22h","L1":"Cơm","L2":"Cơm - Không, trắng, cháy","items":5,"orders":8,"no_sale":0,"avg_ado":1.6,"pct_no_sale":0.0},{"City":"Hai Phong","Hour Slot":"20h-22h","L1":"Thịt, Trứng","L2":"Gà, Vịt","items":3,"orders":0,"no_sale":3,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"20h-22h","L1":"Thịt, Trứng","L2":"Heo, Bò","items":3,"orders":0,"no_sale":3,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"20h-22h","L1":"Trà","L2":"Trà - Khác","items":27,"orders":8,"no_sale":23,"avg_ado":0.296,"pct_no_sale":85.2},{"City":"Hai Phong","Hour Slot":"20h-22h","L1":"Đồ uống không cồn khác","L2":"Đồ uống không cồn khác - Khác","items":16,"orders":10,"no_sale":10,"avg_ado":0.625,"pct_no_sale":62.5},{"City":"Hai Phong","Hour Slot":"20h-22h","L1":"Đồ ăn vặt","L2":"Nem chua","items":9,"orders":4,"no_sale":7,"avg_ado":0.444,"pct_no_sale":77.8},{"City":"Hai Phong","Hour Slot":"20h-22h","L1":"Đồ ăn vặt","L2":"Bánh tráng","items":1,"orders":2,"no_sale":0,"avg_ado":2.0,"pct_no_sale":0.0},{"City":"Hai Phong","Hour Slot":"20h-22h","L1":"Đồ ăn vặt","L2":"Xiên que/ Viên chiên","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"20h-22h","L1":"Ẩm thực quốc tế","L2":"Món Hàn","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"22h-5h","L1":"Bánh truyền thống","L2":"Bánh cuốn/ Bánh ướt","items":4,"orders":0,"no_sale":4,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"22h-5h","L1":"Bánh truyền thống","L2":"Bánh mì","items":8,"orders":0,"no_sale":8,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"22h-5h","L1":"Bánh Âu Á","L2":"Bánh bông lan","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"22h-5h","L1":"Bún/Phở/Mì/Miến","L2":"Bún đậu","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"22h-5h","L1":"Bún/Phở/Mì/Miến","L2":"Hủ tiếu","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"22h-5h","L1":"Bún/Phở/Mì/Miến","L2":"Mì","items":4,"orders":0,"no_sale":4,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"22h-5h","L1":"Bún/Phở/Mì/Miến","L2":"Phở","items":14,"orders":0,"no_sale":14,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"22h-5h","L1":"Others","L2":"Others","items":14,"orders":0,"no_sale":14,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"22h-5h","L1":"Thịt, Trứng","L2":"Gà, Vịt","items":5,"orders":0,"no_sale":5,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"22h-5h","L1":"Thịt, Trứng","L2":"Heo, Bò","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"22h-5h","L1":"Đồ uống không cồn khác","L2":"Đồ uống không cồn khác - Khác","items":38,"orders":0,"no_sale":38,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"22h-5h","L1":"Đồ ăn vặt","L2":"Bánh tráng","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"22h-5h","L1":"Đồ ăn vặt","L2":"Nem chua","items":11,"orders":0,"no_sale":11,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"22h-5h","L1":"Đồ ăn vặt","L2":"Xiên que/ Viên chiên","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"22h-5h","L1":"Ẩm thực quốc tế","L2":"Món Hàn","items":4,"orders":0,"no_sale":4,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"5h-9h","L1":"Bánh truyền thống","L2":"Bánh cuốn/ Bánh ướt","items":5,"orders":0,"no_sale":5,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"5h-9h","L1":"Bánh truyền thống","L2":"Bánh mì","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"5h-9h","L1":"Bún/Phở/Mì/Miến","L2":"Bún","items":13,"orders":0,"no_sale":13,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"5h-9h","L1":"Bún/Phở/Mì/Miến","L2":"Mì","items":13,"orders":0,"no_sale":13,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"5h-9h","L1":"Bún/Phở/Mì/Miến","L2":"Phở","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"5h-9h","L1":"Cà Phê","L2":"Cà phê","items":17,"orders":0,"no_sale":17,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"5h-9h","L1":"Thịt, Trứng","L2":"Heo, Bò","items":3,"orders":0,"no_sale":3,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"5h-9h","L1":"Đồ uống không cồn khác","L2":"Đồ uống không cồn khác - Khác","items":38,"orders":0,"no_sale":38,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"9h-10h","L1":"Bánh truyền thống","L2":"Bánh cuốn/ Bánh ướt","items":5,"orders":0,"no_sale":5,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"9h-10h","L1":"Bánh truyền thống","L2":"Bánh mì","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"9h-10h","L1":"Bánh Âu Á","L2":"Bánh bông lan","items":1,"orders":0,"no_sale":1,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"9h-10h","L1":"Bún/Phở/Mì/Miến","L2":"Bún","items":13,"orders":0,"no_sale":13,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"9h-10h","L1":"Bún/Phở/Mì/Miến","L2":"Mì","items":5,"orders":0,"no_sale":5,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"9h-10h","L1":"Bún/Phở/Mì/Miến","L2":"Phở","items":9,"orders":0,"no_sale":9,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"9h-10h","L1":"Cà Phê","L2":"Cà phê","items":13,"orders":0,"no_sale":13,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"9h-10h","L1":"Cơm","L2":"Cơm - Không, trắng, cháy","items":6,"orders":0,"no_sale":6,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"9h-10h","L1":"Trà","L2":"Trà - Khác","items":27,"orders":0,"no_sale":27,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"9h-10h","L1":"Đồ uống không cồn khác","L2":"Đồ uống không cồn khác - Khác","items":16,"orders":0,"no_sale":16,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"9h-10h","L1":"Đồ ăn nhanh","L2":"Gà rán","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"9h-10h","L1":"Ẩm thực quốc tế","L2":"Món Hàn","items":2,"orders":0,"no_sale":2,"avg_ado":0.0,"pct_no_sale":100.0}],"hour_city":[{"City":"Binh Duong","Hour Slot":"10h-12h","items":252,"orders":26,"no_sale":236,"avg_ado":0.103,"pct_no_sale":93.7},{"City":"Binh Duong","Hour Slot":"12h-13h","items":211,"orders":19,"no_sale":199,"avg_ado":0.09,"pct_no_sale":94.3},{"City":"Binh Duong","Hour Slot":"13h-16h","items":145,"orders":13,"no_sale":135,"avg_ado":0.09,"pct_no_sale":93.1},{"City":"Binh Duong","Hour Slot":"16h-17h","items":227,"orders":11,"no_sale":218,"avg_ado":0.048,"pct_no_sale":96.0},{"City":"Binh Duong","Hour Slot":"17h-20h","items":244,"orders":40,"no_sale":217,"avg_ado":0.164,"pct_no_sale":88.9},{"City":"Binh Duong","Hour Slot":"20h-22h","items":220,"orders":45,"no_sale":191,"avg_ado":0.205,"pct_no_sale":86.8},{"City":"Binh Duong","Hour Slot":"22h-5h","items":223,"orders":0,"no_sale":223,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"5h-9h","items":232,"orders":0,"no_sale":232,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","Hour Slot":"9h-10h","items":253,"orders":0,"no_sale":253,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"10h-12h","items":114,"orders":21,"no_sale":98,"avg_ado":0.184,"pct_no_sale":86.0},{"City":"Hai Phong","Hour Slot":"12h-13h","items":92,"orders":18,"no_sale":78,"avg_ado":0.196,"pct_no_sale":84.8},{"City":"Hai Phong","Hour Slot":"13h-16h","items":75,"orders":16,"no_sale":65,"avg_ado":0.213,"pct_no_sale":86.7},{"City":"Hai Phong","Hour Slot":"16h-17h","items":99,"orders":18,"no_sale":88,"avg_ado":0.182,"pct_no_sale":88.9},{"City":"Hai Phong","Hour Slot":"17h-20h","items":98,"orders":32,"no_sale":76,"avg_ado":0.327,"pct_no_sale":77.6},{"City":"Hai Phong","Hour Slot":"20h-22h","items":102,"orders":45,"no_sale":75,"avg_ado":0.441,"pct_no_sale":73.5},{"City":"Hai Phong","Hour Slot":"22h-5h","items":109,"orders":0,"no_sale":109,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"5h-9h","items":107,"orders":0,"no_sale":107,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","Hour Slot":"9h-10h","items":108,"orders":0,"no_sale":108,"avg_ado":0.0,"pct_no_sale":100.0}],"slot_order":["5h-9h","9h-10h","10h-12h","12h-13h","13h-16h","16h-17h","17h-20h","20h-22h","22h-5h"]}
+;
+const CAT = {"city":[{"City":"Binh Duong","items":2007,"orders":154,"no_sale":1904,"sold_out":4,"avg_ado":0.07673143996013951,"pct_no_sale":94.9},{"City":"Hai Phong","items":904,"orders":150,"no_sale":804,"sold_out":0,"avg_ado":0.16592920353982302,"pct_no_sale":88.9}],"l1":[{"City":"Binh Duong","L1":"Cơm","items":325,"orders":57,"no_sale":295,"sold_out":4,"avg_ado":0.175,"pct_no_sale":90.8},{"City":"Binh Duong","L1":"Bún/Phở/Mì/Miến","items":402,"orders":24,"no_sale":385,"sold_out":0,"avg_ado":0.06,"pct_no_sale":95.8},{"City":"Binh Duong","L1":"Trà","items":191,"orders":20,"no_sale":175,"sold_out":0,"avg_ado":0.105,"pct_no_sale":91.6},{"City":"Binh Duong","L1":"Others","items":333,"orders":19,"no_sale":319,"sold_out":0,"avg_ado":0.057,"pct_no_sale":95.8},{"City":"Binh Duong","L1":"Thịt, Trứng","items":142,"orders":13,"no_sale":135,"sold_out":0,"avg_ado":0.092,"pct_no_sale":95.1},{"City":"Binh Duong","L1":"Đồ ăn vặt","items":84,"orders":9,"no_sale":75,"sold_out":0,"avg_ado":0.107,"pct_no_sale":89.3},{"City":"Binh Duong","L1":"Bánh truyền thống","items":97,"orders":6,"no_sale":92,"sold_out":0,"avg_ado":0.062,"pct_no_sale":94.8},{"City":"Binh Duong","L1":"Cà Phê","items":270,"orders":5,"no_sale":266,"sold_out":0,"avg_ado":0.019,"pct_no_sale":98.5},{"City":"Binh Duong","L1":"Tráng miệng","items":11,"orders":1,"no_sale":10,"sold_out":0,"avg_ado":0.091,"pct_no_sale":90.9},{"City":"Binh Duong","L1":"Bánh Âu Á","items":50,"orders":0,"no_sale":50,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","L1":"Cháo/Soup/Gỏi","items":13,"orders":0,"no_sale":13,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","L1":"Đồ ăn dinh dưỡng","items":2,"orders":0,"no_sale":2,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","L1":"Đồ ăn nhanh","items":24,"orders":0,"no_sale":24,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","L1":"Ẩm thực quốc tế","items":63,"orders":0,"no_sale":63,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","L1":"Đồ uống không cồn khác","items":194,"orders":38,"no_sale":172,"sold_out":0,"avg_ado":0.196,"pct_no_sale":88.7},{"City":"Hai Phong","L1":"Bún/Phở/Mì/Miến","items":195,"orders":37,"no_sale":167,"sold_out":0,"avg_ado":0.19,"pct_no_sale":85.6},{"City":"Hai Phong","L1":"Cơm","items":30,"orders":27,"no_sale":10,"sold_out":0,"avg_ado":0.9,"pct_no_sale":33.3},{"City":"Hai Phong","L1":"Trà","items":135,"orders":17,"no_sale":124,"sold_out":0,"avg_ado":0.126,"pct_no_sale":91.9},{"City":"Hai Phong","L1":"Đồ ăn vặt","items":76,"orders":16,"no_sale":66,"sold_out":0,"avg_ado":0.211,"pct_no_sale":86.8},{"City":"Hai Phong","L1":"Others","items":80,"orders":12,"no_sale":74,"sold_out":0,"avg_ado":0.15,"pct_no_sale":92.5},{"City":"Hai Phong","L1":"Bánh Âu Á","items":12,"orders":2,"no_sale":10,"sold_out":0,"avg_ado":0.167,"pct_no_sale":83.3},{"City":"Hai Phong","L1":"Thịt, Trứng","items":38,"orders":1,"no_sale":37,"sold_out":0,"avg_ado":0.026,"pct_no_sale":97.4},{"City":"Hai Phong","L1":"Bánh truyền thống","items":80,"orders":0,"no_sale":80,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","L1":"Cháo/Soup/Gỏi","items":1,"orders":0,"no_sale":1,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","L1":"Cà Phê","items":40,"orders":0,"no_sale":40,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","L1":"Đồ ăn nhanh","items":2,"orders":0,"no_sale":2,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","L1":"Ẩm thực quốc tế","items":21,"orders":0,"no_sale":21,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0}],"l2":[{"City":"Binh Duong","L1":"Bánh truyền thống","L2":"Bánh cuốn/ Bánh ướt","items":34,"orders":4,"no_sale":31,"sold_out":0,"avg_ado":0.118,"pct_no_sale":91.2},{"City":"Binh Duong","L1":"Bánh truyền thống","L2":"Bánh mì","items":50,"orders":1,"no_sale":49,"sold_out":0,"avg_ado":0.02,"pct_no_sale":98.0},{"City":"Binh Duong","L1":"Bánh truyền thống","L2":"Bánh xèo/ Bánh khọt","items":9,"orders":1,"no_sale":8,"sold_out":0,"avg_ado":0.111,"pct_no_sale":88.9},{"City":"Binh Duong","L1":"Bánh truyền thống","L2":"Bánh hỏi","items":4,"orders":0,"no_sale":4,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","L1":"Bánh Âu Á","L2":"Bánh Âu Á - Khác","items":50,"orders":0,"no_sale":50,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","L1":"Bún/Phở/Mì/Miến","L2":"Bún","items":123,"orders":19,"no_sale":111,"sold_out":0,"avg_ado":0.154,"pct_no_sale":90.2},{"City":"Binh Duong","L1":"Bún/Phở/Mì/Miến","L2":"Hủ tiếu","items":114,"orders":5,"no_sale":109,"sold_out":0,"avg_ado":0.044,"pct_no_sale":95.6},{"City":"Binh Duong","L1":"Bún/Phở/Mì/Miến","L2":"Bánh canh","items":59,"orders":0,"no_sale":59,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","L1":"Bún/Phở/Mì/Miến","L2":"Bún đậu","items":1,"orders":0,"no_sale":1,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","L1":"Bún/Phở/Mì/Miến","L2":"Mì","items":105,"orders":0,"no_sale":105,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","L1":"Cháo/Soup/Gỏi","L2":"Soup","items":13,"orders":0,"no_sale":13,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","L1":"Cà Phê","L2":"Cà phê","items":270,"orders":5,"no_sale":266,"sold_out":0,"avg_ado":0.019,"pct_no_sale":98.5},{"City":"Binh Duong","L1":"Cơm","L2":"Cơm - Không, trắng, cháy","items":232,"orders":55,"no_sale":204,"sold_out":4,"avg_ado":0.237,"pct_no_sale":87.9},{"City":"Binh Duong","L1":"Cơm","L2":"Cơm chiên","items":60,"orders":2,"no_sale":58,"sold_out":0,"avg_ado":0.033,"pct_no_sale":96.7},{"City":"Binh Duong","L1":"Cơm","L2":"Cơm trộn","items":3,"orders":0,"no_sale":3,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","L1":"Cơm","L2":"Xôi","items":30,"orders":0,"no_sale":30,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","L1":"Others","L2":"Others","items":333,"orders":19,"no_sale":319,"sold_out":0,"avg_ado":0.057,"pct_no_sale":95.8},{"City":"Binh Duong","L1":"Thịt, Trứng","L2":"Heo, Bò","items":142,"orders":13,"no_sale":135,"sold_out":0,"avg_ado":0.092,"pct_no_sale":95.1},{"City":"Binh Duong","L1":"Trà","L2":"Trà - Khác","items":191,"orders":20,"no_sale":175,"sold_out":0,"avg_ado":0.105,"pct_no_sale":91.6},{"City":"Binh Duong","L1":"Tráng miệng","L2":"Kem","items":11,"orders":1,"no_sale":10,"sold_out":0,"avg_ado":0.091,"pct_no_sale":90.9},{"City":"Binh Duong","L1":"Đồ ăn dinh dưỡng","L2":"Salad","items":2,"orders":0,"no_sale":2,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","L1":"Đồ ăn nhanh","L2":"Gà rán","items":24,"orders":0,"no_sale":24,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Binh Duong","L1":"Đồ ăn vặt","L2":"Các món cuốn","items":41,"orders":6,"no_sale":35,"sold_out":0,"avg_ado":0.146,"pct_no_sale":85.4},{"City":"Binh Duong","L1":"Đồ ăn vặt","L2":"Bánh tráng","items":43,"orders":3,"no_sale":40,"sold_out":0,"avg_ado":0.07,"pct_no_sale":93.0},{"City":"Binh Duong","L1":"Ẩm thực quốc tế","L2":"Món Hàn","items":63,"orders":0,"no_sale":63,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","L1":"Bánh truyền thống","L2":"Bánh cuốn/ Bánh ướt","items":28,"orders":0,"no_sale":28,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","L1":"Bánh truyền thống","L2":"Bánh mì","items":52,"orders":0,"no_sale":52,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","L1":"Bánh Âu Á","L2":"Bánh bông lan","items":12,"orders":2,"no_sale":10,"sold_out":0,"avg_ado":0.167,"pct_no_sale":83.3},{"City":"Hai Phong","L1":"Bún/Phở/Mì/Miến","L2":"Phở","items":72,"orders":19,"no_sale":61,"sold_out":0,"avg_ado":0.264,"pct_no_sale":84.7},{"City":"Hai Phong","L1":"Bún/Phở/Mì/Miến","L2":"Bún","items":78,"orders":17,"no_sale":62,"sold_out":0,"avg_ado":0.218,"pct_no_sale":79.5},{"City":"Hai Phong","L1":"Bún/Phở/Mì/Miến","L2":"Mì","items":42,"orders":1,"no_sale":41,"sold_out":0,"avg_ado":0.024,"pct_no_sale":97.6},{"City":"Hai Phong","L1":"Bún/Phở/Mì/Miến","L2":"Bún đậu","items":1,"orders":0,"no_sale":1,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","L1":"Bún/Phở/Mì/Miến","L2":"Hủ tiếu","items":2,"orders":0,"no_sale":2,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","L1":"Cháo/Soup/Gỏi","L2":"Gỏi","items":1,"orders":0,"no_sale":1,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","L1":"Cà Phê","L2":"Cà phê","items":40,"orders":0,"no_sale":40,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","L1":"Cơm","L2":"Cơm - Không, trắng, cháy","items":30,"orders":27,"no_sale":10,"sold_out":0,"avg_ado":0.9,"pct_no_sale":33.3},{"City":"Hai Phong","L1":"Others","L2":"Others","items":80,"orders":12,"no_sale":74,"sold_out":0,"avg_ado":0.15,"pct_no_sale":92.5},{"City":"Hai Phong","L1":"Thịt, Trứng","L2":"Gà, Vịt","items":26,"orders":1,"no_sale":25,"sold_out":0,"avg_ado":0.038,"pct_no_sale":96.2},{"City":"Hai Phong","L1":"Thịt, Trứng","L2":"Heo, Bò","items":12,"orders":0,"no_sale":12,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","L1":"Trà","L2":"Trà - Khác","items":135,"orders":17,"no_sale":124,"sold_out":0,"avg_ado":0.126,"pct_no_sale":91.9},{"City":"Hai Phong","L1":"Đồ uống không cồn khác","L2":"Đồ uống không cồn khác - Khác","items":194,"orders":38,"no_sale":172,"sold_out":0,"avg_ado":0.196,"pct_no_sale":88.7},{"City":"Hai Phong","L1":"Đồ ăn nhanh","L2":"Gà rán","items":2,"orders":0,"no_sale":2,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","L1":"Đồ ăn vặt","L2":"Nem chua","items":50,"orders":13,"no_sale":42,"sold_out":0,"avg_ado":0.26,"pct_no_sale":84.0},{"City":"Hai Phong","L1":"Đồ ăn vặt","L2":"Bánh tráng","items":9,"orders":3,"no_sale":7,"sold_out":0,"avg_ado":0.333,"pct_no_sale":77.8},{"City":"Hai Phong","L1":"Đồ ăn vặt","L2":"Xiên que/ Viên chiên","items":17,"orders":0,"no_sale":17,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0},{"City":"Hai Phong","L1":"Ẩm thực quốc tế","L2":"Món Hàn","items":21,"orders":0,"no_sale":21,"sold_out":0,"avg_ado":0.0,"pct_no_sale":100.0}]}
+;
+let pfmCity = 'all';
+let pfmView = 'cat';
+let pfmInited = false;
+
+function setPfmCity(c){
+  pfmCity=c;
+  document.querySelectorAll('#pfmBtnAll,#pfmBtnHP,#pfmBtnBD').forEach(b=>{
+    b.style.background='';b.style.color='';b.style.borderColor='';
+  });
+  const active=c==='all'?'pfmBtnAll':c==='HP'?'pfmBtnHP':'pfmBtnBD';
+  const btn=document.getElementById(active);
+  if(btn){btn.style.background='#111';btn.style.color='#fff';btn.style.borderColor='#111';}
+  renderPfm();
+}
+
+function setPfmView(v){
+  pfmView=v;
+  document.querySelectorAll('#pfmViewCat,#pfmViewHr').forEach(b=>{b.style.background='';b.style.color='';b.style.borderColor='';});
+  const btn=document.getElementById(v==='cat'?'pfmViewCat':'pfmViewHr');
+  if(btn){btn.style.background='#111';btn.style.color='#fff';btn.style.borderColor='#111';}
+  renderPfm();
+}
+
+function initPfm(){
+  if(!pfmInited){pfmInited=true;}
+  renderPfm();
+}
+
+function nsClass(pct){
+  return pct>=95?'pct-bad':pct>=85?'pct-mid':'pct-good';
+}
+
+function renderPfm(){
+  const container=document.getElementById('pfmContent');
+  container.innerHTML='';
+  if(pfmView==='hour'){renderPfmByHour(container);return;}
+
+  const cities=pfmCity==='all'?['Hai Phong','Binh Duong']:
+                pfmCity==='HP'?['Hai Phong']:['Binh Duong'];
+
+  cities.forEach(city=>{
+    const cityL1=CAT.l1.filter(r=>r.City===city);
+    const cityTotal=CAT.city.find(r=>r.City===city)||{};
+
+    // City header card
+    const hdrDiv=el('div');
+    hdrDiv.style.cssText='background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);margin-bottom:18px;overflow:hidden;box-shadow:var(--sh)';
+
+    const cityHdr=el('div');
+    cityHdr.style.cssText='padding:12px 16px;border-bottom:1px solid var(--bdr2);display:flex;align-items:center;gap:16px;background:var(--bg)';
+    const badge=city==='Hai Phong'?
+      '<span class="cbadge hp">Hai Phong → HN</span>':
+      '<span class="cbadge bd">Binh Duong → HCM</span>';
+    cityHdr.innerHTML=badge+
+      `<span style="font-size:12px"><strong>${cityTotal.items?.toLocaleString()||0}</strong> listed</span>`+
+      `<span style="font-size:12px"><strong style="color:var(--p2c)">${cityTotal.orders?.toLocaleString()||0}</strong> orders</span>`+
+      `<span style="font-size:12px" class="${nsClass(cityTotal.pct_no_sale||0)}">${cityTotal.pct_no_sale||0}% no-sale</span>`+
+      `<span style="font-size:12px;color:var(--mu)">avg ADO <strong>${(cityTotal.avg_ado||0).toFixed(3)}</strong></span>`;
+    hdrDiv.appendChild(cityHdr);
+
+    // Table
+    const tbl=el('table','pfm-tbl');
+    tbl.innerHTML=`<thead><tr>
+      <th style="width:200px">L1 Category</th>
+      <th>L2 Category</th>
+      <th>Listed</th>
+      <th>Orders</th>
+      <th>% No Sale</th>
+      <th style="min-width:100px"></th>
+      <th>Avg ADO</th>
+      <th>Sold Out</th>
+    </tr></thead>`;
+    const tb=el('tbody');
+
+    cityL1.forEach(l1row=>{
+      const l2rows=CAT.l2.filter(r=>r.City===city&&r.L1===l1row.L1);
+      const ns=l1row.pct_no_sale;
+      const barW=Math.round(ns*0.6);
+      const barColor=ns>=95?'#dc2626':ns>=85?'#d97706':'#16a34a';
+
+      // L1 summary row
+      const tr1=el('tr','l1-row');
+      tr1.innerHTML=`<td>${esc(l1row.L1)}</td><td style="color:var(--mu);font-size:11px">${l2rows.length} sub-cat</td>
+        <td>${l1row.items}</td>
+        <td style="color:var(--p2c);font-weight:700">${l1row.orders}</td>
+        <td class="pct-cell ${nsClass(ns)}">${ns}%</td>
+        <td><span class="nosale-bar" style="width:${barW}px;background:${barColor}"></span></td>
+        <td class="pnum">${l1row.avg_ado.toFixed(3)}</td>
+        <td style="color:${l1row.sold_out>0?'var(--p3c)':'var(--fa)'};">${l1row.sold_out>0?l1row.sold_out:'—'}</td>`;
+      tb.appendChild(tr1);
+
+      // L2 rows
+      l2rows.forEach(l2row=>{
+        const ns2=l2row.pct_no_sale;
+        const bw=Math.round(ns2*0.6);
+        const bc=ns2>=95?'#dc2626':ns2>=85?'#d97706':'#16a34a';
+        const tr2=el('tr','l2-row');
+        tr2.innerHTML=`<td></td><td>${esc(l2row.L2)}</td>
+          <td style="color:var(--mu)">${l2row.items}</td>
+          <td style="font-weight:${l2row.orders>0?'600':'400'};color:${l2row.orders>0?'var(--p2c)':'var(--fa)'}">${l2row.orders||'—'}</td>
+          <td class="pct-cell ${nsClass(ns2)}">${ns2}%</td>
+          <td><span class="nosale-bar" style="width:${bw}px;background:${bc}"></span></td>
+          <td class="pnum">${l2row.avg_ado.toFixed(3)}</td>
+          <td style="color:var(--fa)">${l2row.sold_out>0?l2row.sold_out:'—'}</td>`;
+        tb.appendChild(tr2);
+      });
+    });
+
+    tbl.appendChild(tb);
+    hdrDiv.appendChild(tbl);
+    container.appendChild(hdrDiv);
+  });
+}
+
 
 init();
 </script>
